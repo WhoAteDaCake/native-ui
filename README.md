@@ -24,7 +24,10 @@ TODO: Write usage instructions here
 
 ## Development
 
-TODO: Write development instructions here
+Bindings
+```
+@[Link(ldflags: "-L./LCUI/lib")]
+```
 
 ## Contributing
 
