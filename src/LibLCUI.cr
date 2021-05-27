@@ -1,9 +1,3 @@
-@[Link(ldflags: "`pkg-config --cflags --libs x11 xcb libpng fontconfig`")]
-# Rest
-@[Link(ldflags: "-L#{__DIR__}/../LCUI/src/.libs")]
-@[Link(ldflags: "-lLCUI")]
-@[Link(ldflags: "-I#{__DIR__}/../LCUI/include")]
-@[Link(ldflags: "-I#{__DIR__}/../LCUI/")]
 lib LibLCUI
   LCUI_MAX_FRAMES_PER_SEC = 120
   LCUI_DIRENT_NAME_LEN = 256
@@ -312,6 +306,14 @@ repeat : LcuiBackgroundRepeat
   struct LcuiBackgroundRepeat
     x : LcuiBool
     y : LcuiBool
+  end
+  struct LcuiBackgroundPosition
+    x : LibC::Int
+    y : LibC::Int
+  end
+  struct LcuiBackgroundSize
+    width : LibC::Int
+    height : LibC::Int
   end
   struct LcuiPaintContextRec
         # 需要绘制的区域
@@ -644,10 +646,12 @@ fun lcui_cond_init = LCUICond_Init(cond : LcuiCond*) : LibC::Int
   alias LcuiCond = PthreadCondT
   struct X__PthreadCondS
     __wseq : LibC::ULongLong
+    __low : LibC::UInt
     __high : LibC::UInt
     __wseq32 : X__PthreadCondSWseq32
     __g1_start : LibC::ULongLong
     __low : LibC::UInt
+    __high : LibC::UInt
     __g1_start32 : X__PthreadCondSG1Start32
     __g_refs : LibC::UInt[2]
     __g_size : LibC::UInt[2]
@@ -1268,8 +1272,33 @@ fun lcui_builder_load_file = LCUIBuilder_LoadFile(filepath : LibC::Char*) : Lcui
   fun lcui_widget_refresh_text_view = LCUIWidget_RefreshTextView : LibC::SizeT
   fun lcui_widget_add_text_view = LCUIWidget_AddTextView
   fun lcui_widget_free_text_view = LCUIWidget_FreeTextView
+    # Enable style tag parser
+fun text_edit_enable_style_tag = TextEdit_EnableStyleTag(widget : LcuiWidget, enable : LcuiBool)
+  fun text_edit_enable_multiline = TextEdit_EnableMultiline(widget : LcuiWidget, enable : LcuiBool)
+  fun text_edit_move_caret = TextEdit_MoveCaret(widget : LcuiWidget, row : LibC::Int, col : LibC::Int)
+    # 清空文本内容
+fun text_edit_clear_text = TextEdit_ClearText(widget : LcuiWidget)
+    # 获取文本内容
+fun text_edit_get_text_w = TextEdit_GetTextW(w : LcuiWidget, start : LibC::SizeT, max_len : LibC::SizeT, buf : WcharT*) : LibC::SizeT
+    # 获取文本长度
+fun text_edit_get_text_length = TextEdit_GetTextLength(w : LcuiWidget) : LibC::SizeT
+    # 设置文本编辑框内的光标，指定是否闪烁、闪烁时间间隔
+fun text_edit_set_caret_blink = TextEdit_SetCaretBlink(w : LcuiWidget, visible : LcuiBool, time : LibC::Int)
+  fun text_edit_get_property = TextEdit_GetProperty(w : LcuiWidget, name : LibC::Char*) : LcuiObject
+    # 为文本框设置文本（宽字符版）
+fun text_edit_set_text_w = TextEdit_SetTextW(widget : LcuiWidget, wstr : WcharT*) : LibC::Int
+  fun text_edit_set_text = TextEdit_SetText(widget : LcuiWidget, utf8_str : LibC::Char*) : LibC::Int
+    # 为文本框追加文本（宽字符版）
+fun text_edit_append_text_w = TextEdit_AppendTextW(widget : LcuiWidget, wstr : WcharT*) : LibC::Int
+    # 为文本框插入文本（宽字符版）
+fun text_edit_insert_text_w = TextEdit_InsertTextW(widget : LcuiWidget, wstr : WcharT*) : LibC::Int
+    # 设置占位符，当文本编辑框内容为空时显示占位符
+fun text_edit_set_place_holder_w = TextEdit_SetPlaceHolderW(w : LcuiWidget, wstr : WcharT*) : LibC::Int
+  fun text_edit_set_place_holder = TextEdit_SetPlaceHolder(w : LcuiWidget, str : LibC::Char*) : LibC::Int
+    # 设置密码屏蔽符
+fun text_edit_set_password_char = TextEdit_SetPasswordChar(w : LcuiWidget, ch : WcharT)
   fun lcui_widget_add_text_edit = LCUIWidget_AddTextEdit
-  # $LCUI_WStringObject : LcuiObjectTypeRec*
-  # $LCUI_StringObject : LcuiObjectTypeRec*
-  # $LCUI_NumberObject : LcuiObjectTypeRec*
+  $LCUI_WStringObject : LcuiObjectTypeRec*
+  $LCUI_StringObject : LcuiObjectTypeRec*
+  $LCUI_NumberObject : LcuiObjectTypeRec*
 end
