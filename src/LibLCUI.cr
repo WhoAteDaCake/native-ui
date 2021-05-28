@@ -1,3 +1,9 @@
+@[Link(ldflags: "`pkg-config --cflags --libs x11 xcb libpng fontconfig`")]
+# Rest
+@[Link(ldflags: "-L#{__DIR__}/../LCUI/src/.libs")]
+@[Link(ldflags: "-lLCUI")]
+@[Link(ldflags: "-I#{__DIR__}/../LCUI/include")]
+@[Link(ldflags: "-I#{__DIR__}/../LCUI/")]
 lib LibLCUI
   LCUI_MAX_FRAMES_PER_SEC = 120
   LCUI_DIRENT_NAME_LEN = 256
@@ -243,7 +249,8 @@ enum LcuiStyleType
     SvRow = 44
     SvColumn = 45
   end
-  alias WcharT = LibC::Int
+  alias WcharT = Int32
+  # alias WcharT = UInt16
   struct LcuiFlexLayoutStyle
         # The flex shrink factor of a flex item See more: https://developer.mozilla.org/en-US/docs/Web/CSS/flex-shrink
 shrink : LibC::Float
@@ -306,14 +313,6 @@ repeat : LcuiBackgroundRepeat
   struct LcuiBackgroundRepeat
     x : LcuiBool
     y : LcuiBool
-  end
-  struct LcuiBackgroundPosition
-    x : LibC::Int
-    y : LibC::Int
-  end
-  struct LcuiBackgroundSize
-    width : LibC::Int
-    height : LibC::Int
   end
   struct LcuiPaintContextRec
         # 需要绘制的区域
@@ -646,8 +645,6 @@ fun lcui_cond_init = LCUICond_Init(cond : LcuiCond*) : LibC::Int
   alias LcuiCond = PthreadCondT
   struct X__PthreadCondS
     __wseq : LibC::ULongLong
-    __low : LibC::UInt
-    __high : LibC::UInt
     __wseq32 : X__PthreadCondSWseq32
     __g1_start : LibC::ULongLong
     __low : LibC::UInt
@@ -1269,6 +1266,14 @@ fun widget_get_children_style_changes = Widget_GetChildrenStyleChanges(w : LcuiW
 fun lcui_builder_load_string = LCUIBuilder_LoadString(str : LibC::Char*, size : LibC::Int) : LcuiWidget
     # 从文件中载入界面配置代码，解析并生成相应的图形界面(元素)
 fun lcui_builder_load_file = LCUIBuilder_LoadFile(filepath : LibC::Char*) : LcuiWidget
+    # 设定与标签关联的文本内容
+fun text_view_set_text_w = TextView_SetTextW(w : LcuiWidget, text : WcharT*) : LibC::Int
+  fun text_view_set_text = TextView_SetText(w : LcuiWidget, utf8_text : LibC::Char*) : LibC::Int
+  fun text_view_set_line_height = TextView_SetLineHeight(w : LcuiWidget, height : LibC::Int)
+  fun text_view_set_text_align = TextView_SetTextAlign(w : LcuiWidget, align : LibC::Int)
+  fun text_view_set_color = TextView_SetColor(w : LcuiWidget, color : LcuiColor)
+  fun text_view_set_auto_wrap = TextView_SetAutoWrap(w : LcuiWidget, enable : LcuiBool)
+  fun text_view_set_mulitiline = TextView_SetMulitiline(w : LcuiWidget, enable : LcuiBool)
   fun lcui_widget_refresh_text_view = LCUIWidget_RefreshTextView : LibC::SizeT
   fun lcui_widget_add_text_view = LCUIWidget_AddTextView
   fun lcui_widget_free_text_view = LCUIWidget_FreeTextView
@@ -1298,7 +1303,7 @@ fun text_edit_set_place_holder_w = TextEdit_SetPlaceHolderW(w : LcuiWidget, wstr
     # 设置密码屏蔽符
 fun text_edit_set_password_char = TextEdit_SetPasswordChar(w : LcuiWidget, ch : WcharT)
   fun lcui_widget_add_text_edit = LCUIWidget_AddTextEdit
-  $LCUI_WStringObject : LcuiObjectTypeRec*
-  $LCUI_StringObject : LcuiObjectTypeRec*
-  $LCUI_NumberObject : LcuiObjectTypeRec*
+  # $LCUI_WStringObject : LcuiObjectTypeRec*
+  # $LCUI_StringObject : LcuiObjectTypeRec*
+  # $LCUI_NumberObject : LcuiObjectTypeRec*
 end

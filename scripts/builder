@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# export LD_LIBRARY_PATH="$(pwd)/lib/imgui-sfml"
+fwatcher --all-events \
+  --dir src \
+  -x \
+  execute shards build --debug native-ui

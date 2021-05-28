@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug",
+      "type": "gdb",
+      "request": "launch",
+      "target": "./bin/${workspaceFolderBasename}",
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": "Compile",
+      "env": {
+        "C_INCLUDE_PATH": "$C_INCLUDE_PATH:/usr/include/libxml2:/usr/include/freetype2/",
+        "LD_LIBRARY_PATH": "$(pwd)/LCUI/src/.libs:$LD_LIBRARY_PATH"
+      }
+    }
+  ],
+}

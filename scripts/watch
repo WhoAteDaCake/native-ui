@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+fwatcher --delay=1.0 -a --dir ./bin \
+  --on-start execute ./bin/native-ui
