@@ -16,9 +16,20 @@ class Widget
       data_as_callback.call(me.value, event.value)
     }, boxed_data, nil)
   end
-
 end
 
+# Notes
+# - LCUIWidget_NewPrototype -> Creates new widget [widget_prototype.c] (125)
+# - LCUI_WidgetPrototypeRec_ -> [widget_base.h] (150)
+# - LCUI_SettingsRec -> global settings [settings.c] (35)
+# - LCUI_WidgetPrototypeModule -> where models are stored [widget_prototype.c] (38)
+# - ParseResource -> Parses HTML code [builder.c] (95)
+# - LCUIWidget_New -> Create widget [builder.c] (174)
+
+
+# Notes:
+# rather than loading from HTML
+# Create nodes manually ?
 def main()
 
   LibLCUI.lcui_init()
