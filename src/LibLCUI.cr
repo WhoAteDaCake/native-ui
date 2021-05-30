@@ -249,8 +249,7 @@ enum LcuiStyleType
     SvRow = 44
     SvColumn = 45
   end
-  alias WcharT = Int32
-  # alias WcharT = UInt16
+  alias WcharT = LibC::Int
   struct LcuiFlexLayoutStyle
         # The flex shrink factor of a flex item See more: https://developer.mozilla.org/en-US/docs/Web/CSS/flex-shrink
 shrink : LibC::Float
@@ -1266,6 +1265,212 @@ fun widget_get_children_style_changes = Widget_GetChildrenStyleChanges(w : LcuiW
 fun lcui_builder_load_string = LCUIBuilder_LoadString(str : LibC::Char*, size : LibC::Int) : LcuiWidget
     # 从文件中载入界面配置代码，解析并生成相应的图形界面(元素)
 fun lcui_builder_load_file = LCUIBuilder_LoadFile(filepath : LibC::Char*) : LcuiWidget
+  struct LcuiFontBitmap
+        # 与顶边框的距离
+top : LibC::Int
+        # 与左边框的距离
+left : LibC::Int
+        # 位图宽度
+width : LibC::Int
+        # 位图行数
+rows : LibC::Int
+    pitch : LibC::Int
+        # 字体位图数据
+buffer : UcharT*
+    num_grays : LibC::Short
+    pixel_mode : LibC::Char
+        # XY轴的跨距
+advance : LcuiPos
+  end
+  struct LcuiFontEngine
+    name : LibC::Char[64]
+    open : (LibC::Char*, LcuiFont** -> LibC::Int)
+    render : (LcuiFontBitmap*, WcharT, LibC::Int, LcuiFont -> LibC::Int)
+    close : (Void* -> Void)
+  end
+  struct LcuiFontRec
+        # 字体信息ID
+id : LibC::Int
+        # 样式名称
+style_name : LibC::Char*
+        # 字族名称
+family_name : LibC::Char*
+        # 相关数据
+data : Void*
+        # 风格
+style : LcuiFontStyle
+        # 粗细程度
+weight : LcuiFontWeight
+        # 所属的字体引擎
+engine : LcuiFontEngine*
+  end
+  alias LcuiFont = LcuiFontRec*
+  enum LcuiFontStyle
+    FontStyleNormal = 0
+    FontStyleItalic = 1
+    FontStyleOblique = 2
+    FontStyleTotalNum = 3
+  end
+  enum LcuiFontWeight
+    FontWeightNone = 0
+    FontWeightThin = 100
+    FontWeightExtraLight = 200
+    FontWeightLight = 300
+    FontWeightNormal = 400
+    FontWeightMedium = 500
+    FontWeightSemiBold = 600
+    FontWeightBold = 700
+    FontWeightExtraBold = 800
+    FontWeightBlack = 900
+    FontWeightTotalNum = 9
+  end
+    # 根据字符串内容猜测字体粗细程度 文档：https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight
+fun lcui_font_detect_weight = LCUIFont_DetectWeight(str : LibC::Char*) : LcuiFontWeight
+    # 根据字符串内容猜测字体风格 文档：https://developer.mozilla.org/en-US/docs/Web/CSS/font-style
+fun lcui_font_detect_style = LCUIFont_DetectStyle(str : LibC::Char*) : LcuiFontStyle
+  fun lcui_font_init_in_core_font = LCUIFont_InitInCoreFont(engine : LcuiFontEngine*) : LibC::Int
+  fun lcui_font_exit_in_core_font = LCUIFont_ExitInCoreFont : LibC::Int
+    # 载入字体位图
+fun lcui_font_render_bitmap = LCUIFont_RenderBitmap(buff : LcuiFontBitmap*, ch : WcharT, font_id : LibC::Int, pixel_size : LibC::Int) : LibC::Int
+    # 添加字体族，并返回该字族的ID
+fun lcui_font_add = LCUIFont_Add(font : LcuiFont) : LibC::Int
+    # 获取字体的ID
+fun lcui_font_get_id = LCUIFont_GetId(family_name : LibC::Char*, style : LcuiFontStyle, weight : LcuiFontWeight) : LibC::Int
+    # 更新当前字体的粗细程度
+fun lcui_font_update_weight = LCUIFont_UpdateWeight(font_ids : LibC::Int*, weight : LcuiFontWeight, new_font_ids : LibC::Int**) : LibC::SizeT
+    # 更新当前字体的风格
+fun lcui_font_update_style = LCUIFont_UpdateStyle(font_ids : LibC::Int*, style : LcuiFontStyle, new_font_ids : LibC::Int**) : LibC::SizeT
+    # 根据字族名称获取对应的字体 ID 列表
+fun lcui_font_get_id_by_names = LCUIFont_GetIdByNames(font_ids : LibC::Int**, style : LcuiFontStyle, weight : LcuiFontWeight, names : LibC::Char*) : LibC::SizeT
+    # 获取指定字体ID的字体信息
+fun lcui_font_get_by_id = LCUIFont_GetById(id : LibC::Int) : LcuiFont
+    # 获取默认的字体ID
+fun lcui_font_get_default = LCUIFont_GetDefault : LibC::Int
+    # 设定默认的字体
+fun lcui_font_set_default = LCUIFont_SetDefault(id : LibC::Int)
+    # 向字体缓存中添加字体位图
+fun lcui_font_add_bitmap = LCUIFont_AddBitmap(ch : WcharT, font_id : LibC::Int, size : LibC::Int, bmp : LcuiFontBitmap*) : LcuiFontBitmap*
+    # 从缓存中获取字体位图
+fun lcui_font_get_bitmap = LCUIFont_GetBitmap(ch : WcharT, font_id : LibC::Int, size : LibC::Int, bmp : LcuiFontBitmap**) : LibC::Int
+    # 载入字体至数据库中
+fun lcui_font_load_file = LCUIFont_LoadFile(filepath : LibC::Char*) : LibC::Int
+    # 初始化字体处理模块
+fun lcui_init_font_library = LCUI_InitFontLibrary
+    # 停用字体处理模块
+fun lcui_free_font_library = LCUI_FreeFontLibrary
+  struct LcuiCssParserRec
+    parse : LcuiCssParserFunction
+  end
+  struct LcuiCssParserContextRec
+        # 缓存中的字符串的下标位置
+pos : LibC::Int
+        # 用于遍历字符串的指针
+cur : LibC::Char*
+        # 样式记录所属的空间
+space : LibC::Char*
+        # 缓存中的字符串
+buffer : LibC::Char*
+        # 缓存区大小
+buffer_size : LibC::SizeT
+        # 当前解析目标
+target : LcuiCssParserTarget
+        # 可供使用的解析器列表
+parsers : LcuiCssParsers
+    rule : LcuiCssParserRuleContextRec
+    style : LcuiCssParserStyleContextRec
+    comment : LcuiCssParserCommentContextRec
+  end
+  alias LcuiCssParserContext = LcuiCssParserContextRec*
+  alias LcuiCssParserFunction = (LcuiCssParserContext -> LibC::Int)
+  enum LcuiCssParserTarget
+        # 无
+CssTargetNone = 0
+        # 规则名称
+CssTargetRuleName = 1
+        # 规则数据
+CssTargetRuleData = 2
+        # 选择器
+CssTargetSelector = 3
+        # 属性名
+CssTargetKey = 4
+        # 属性值
+CssTargetValue = 5
+        # 注释
+CssTargetComment = 6
+    CssTargetTotalNum = 7
+  end
+  alias LcuiCssParsers = LcuiCssParserRec[7]
+  struct LcuiCssParserRuleContextRec
+        # 规则解析器的状态
+state : LibC::Int
+        # 当前规则
+rule : LcuiCssRule
+        # 规则解析器列表
+parsers : LcuiCssRuleParsers
+  end
+  enum LcuiCssRule
+    CssRuleNone = 0
+        # -face
+CssRuleFontFace = 1
+    CssRuleImport = 2
+    CssRuleMedia = 3
+    CssRuleTotalNum = 4
+  end
+  struct LcuiCssRuleParserRec
+    name : LibC::Char[32]
+    data : Void*
+    begin : LcuiCssParserFunction
+    parse : LcuiCssParserFunction
+  end
+  alias LcuiCssRuleParsers = LcuiCssRuleParserRec[4]
+  struct LcuiCssParserStyleContextRec
+        # 当前所在的目录
+dirname : LibC::Char*
+        # 样式记录所属的空间
+space : LibC::Char*
+    style_handler : (LibC::Int, LcuiStyle, Void* -> Void)
+    style_handler_arg : Void*
+        # 当前匹配到的选择器列表
+selectors : LinkedList
+        # 当前缓存的样式表
+sheet : LcuiStyleSheet
+        # 当前找到的样式属性解析器
+parser : LcuiCssPropertyParser
+  end
+  struct LcuiCssPropertyParserRec
+        # 标识，在解析数据时可以使用它访问样式表中的自定义属性
+key : LibC::Int
+        # 名称，对应 CSS 样式属性名称
+name : LibC::Char*
+    parse : (LcuiCssParserStyleContext, LibC::Char* -> LibC::Int)
+  end
+  alias LcuiCssPropertyParser = LcuiCssPropertyParserRec*
+  alias LcuiCssParserStyleContext = LcuiCssParserStyleContextRec*
+  struct LcuiCssParserCommentContextRec
+        # 是否为单行注释
+is_line_comment : LcuiBool
+        # 保存的上一个目标，解析完注释后将还原成该目标
+prev_target : LcuiCssParserTarget
+  end
+  fun lcui_get_style_value = LCUI_GetStyleValue(str : LibC::Char*) : LibC::Int
+  fun lcui_get_style_value_name = LCUI_GetStyleValueName(val : LibC::Int) : LibC::Char*
+  fun lcui_get_style_name = LCUI_GetStyleName(key : LibC::Int) : LibC::Char*
+    # 初始化 LCUI 的 CSS 代码解析功能
+fun lcui_init_css_parser = LCUI_InitCSSParser
+  fun lcui_get_css_property_parser = LCUI_GetCSSPropertyParser(name : LibC::Char*) : LcuiCssPropertyParser
+    # 从文件中载入CSS样式数据，并导入至样式库中
+fun lcui_load_css_file = LCUI_LoadCSSFile(filepath : LibC::Char*) : LibC::Int
+    # 从字符串中载入CSS样式数据，并导入至样式库中
+fun lcui_load_css_string = LCUI_LoadCSSString(str : LibC::Char*, space : LibC::Char*) : LibC::SizeT
+  fun lcui_free_css_parser = LCUI_FreeCSSParser
+    # 注册新的属性和对应的属性值解析器
+fun lcui_add_css_property_parser = LCUI_AddCSSPropertyParser(sp : LcuiCssPropertyParser) : LibC::Int
+  struct LcuiCssFontFaceRec
+    font_family : LibC::Char*
+    font_style : LcuiFontStyle
+    font_weight : LcuiFontWeight
+    src : LibC::Char*
+  end
     # 设定与标签关联的文本内容
 fun text_view_set_text_w = TextView_SetTextW(w : LcuiWidget, text : WcharT*) : LibC::Int
   fun text_view_set_text = TextView_SetText(w : LcuiWidget, utf8_text : LibC::Char*) : LibC::Int

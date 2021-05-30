@@ -8,6 +8,10 @@ class Widget
   @box: EventHash
   @children : Array(Widget)
 
+   def self.root()
+    Widget.new(LibLCUI.lcui_widget_get_root())
+  end
+
   def initialize(internal : LibLCUI::LcuiWidget)
     @internal = internal
     @box = EventHash.new
@@ -15,12 +19,15 @@ class Widget
   end
 
   def initialize(proto_name : String)
-    @internal = LibLCUI.lcui_widget_new(proto_name)
-    @box = EventHash.new
-    @children = Array(Widget).new
+    initialize(LibLCUI.lcui_widget_new(proto_name))
+  end
+
+  def initialize()
+    initialize("widget")
   end
 
   def finalize
+    remove_all_children
     @box.each do |key, value|
       unbind_event(key)
     end
@@ -64,7 +71,12 @@ class Widget
     @children.clear
   end
 
-  def self.root()
-    Widget.new(LibLCUI.lcui_widget_get_root())
+  def add_class(cname : String)
+    LibLCUI.widget_add_class(@internal, cname)
   end
+
+  def remove_class(cname : String)
+    LibLCUI.remove_class(@internal, cname)
+  end
+
 end

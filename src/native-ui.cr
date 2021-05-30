@@ -10,19 +10,22 @@ require "./lcui"
 # - ParseResource -> Parses HTML code [builder.c] (95)
 # - LCUIWidget_New -> Create widget [widget_base.c] (174)
 
-# Notes:
-# rather than loading from HTML
-# Create nodes manually ?
 def main()
   LibLCUI.lcui_init()
+  LibLCUI.lcui_load_css_file("./assets/styles.css")
 
   root = Widget.root()
+  root.add_class("item")
+
   button = Button.new("Hello world")
+  button.add_class("item")
+
   button.on_click do | node, event |
     # p! event
     button.set_text("Govna")
   end
-  root.append_child(button.widget)
+
+  root.append_child(button)
   LibLCUI.lcui_main()
 end
 
