@@ -5,6 +5,9 @@ require "./widget"
 class Button
   property widget : Widget
 
+  # Inherited
+  delegate set_text, to: @widget
+
   def initialize(text : String)
     @widget = Widget.new("button")
     @widget.set_text(text)

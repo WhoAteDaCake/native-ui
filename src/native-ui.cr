@@ -19,35 +19,10 @@ def main()
   root = Widget.root()
   button = Button.new("Hello world")
   button.on_click do | node, event |
-    p! event
+    # p! event
+    button.set_text("Govna")
   end
-  root.append(button.widget)
-  
-  # pack = LibLCUI.lcui_builder_load_file("./assets/helloworld.xml")
-  # LibLCUI.widget_append(root, pack)
-  # LibLCUI.widget_unwrap(pack)
-
-  # btn = Widget.new("btn")
-  # btn.on_click do | e, data |
-  #   edit = LibLCUI.lcui_widget_get_by_id("edit")
-  #   text = LibLCUI.lcui_widget_get_by_id("text-hellos")
-  #   p! text.null?
-
-  #   # buffer = Slice(LibLCUI::WcharT).new(256)
-  #   # LibLCUI.text_edit_get_text_w(edit, 0, 255, buffer)
-  #   # LibLCUI.text_view_set_text_w(text, buffer)
-    
-  #   # NOTE: how to read the string value
-  #   # pointer = buffer.to_unsafe 
-  #   # loop do
-  #   #   string, pointer = String.from_utf16(pointer) # => "hi"
-  #   #   p! string
-  #   #   if string.size == 0
-  #   #     break
-  #   #   end
-  #   # end
-  # end
-
+  root.append_child(button.widget)
   LibLCUI.lcui_main()
 end
 
