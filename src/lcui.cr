@@ -1,3 +1,4 @@
+require "sass"
 require "./LibLCUI.cr"
 
 module Lcui
@@ -8,7 +9,12 @@ module Lcui
     @@css << css
   end
 
+  def self.register_sass(sass : String)
+    @@css << Sass.compile(sass)
+  end
+
   def self.load_css()
+    p! @@css
     @@css.each do |css|
       status = LibLCUI.lcui_load_css_string(css, __DIR__)
       if status != 0

@@ -28,7 +28,8 @@ def main()
   root.add_class("root")
 
   header = Header.new
-  header.render(root)
+  header.mount_on(root)
+
   LibLCUI.lcui_main()
 end
 

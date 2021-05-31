@@ -11,4 +11,8 @@ class Button < Widget
   def on_click(&callback : Lcui::EventCallback)
     bind_event("click", callback)
   end
+
+  def on_click(callback : Lcui::EventCallback)
+    bind_event("click", callback)
+  end
 end

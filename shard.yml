@@ -14,4 +14,8 @@ targets:
   native-ui:
     main: ./src/native-ui.cr
 
+dependencies:
+  sass:
+    github: straight-shoota/sass.cr
+
 license: MIT
