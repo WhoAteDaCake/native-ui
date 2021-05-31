@@ -249,7 +249,7 @@ enum LcuiStyleType
     SvRow = 44
     SvColumn = 45
   end
-  alias WcharT = LibC::Int
+  alias WcharT = UInt16
   struct LcuiFlexLayoutStyle
         # The flex shrink factor of a flex item See more: https://developer.mozilla.org/en-US/docs/Web/CSS/flex-shrink
 shrink : LibC::Float

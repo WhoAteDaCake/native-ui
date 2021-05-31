@@ -34,7 +34,7 @@ class Header
   end
 
   def on_add()
-    
+    p! @input.get_value
   end
 
   def mount_on(parent : Widget)
