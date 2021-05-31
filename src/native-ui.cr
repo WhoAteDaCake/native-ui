@@ -1,5 +1,6 @@
 require "./LibLCUI"
 require "./widgets/*"
+require "./components/*"
 require "./lcui"
 
 # Notes
@@ -10,22 +11,24 @@ require "./lcui"
 # - ParseResource -> Parses HTML code [builder.c] (95)
 # - LCUIWidget_New -> Create widget [widget_base.c] (174)
 
+Lcui.register_css("
+  .root {
+    height: 100%;
+    width: 100%;
+    display: flex;
+  }
+")
+
 def main()
   LibLCUI.lcui_init()
-  LibLCUI.lcui_load_css_file("./assets/styles.css")
+  Lcui.load_css()
 
   root = Widget.root()
-  root.add_class("item")
+  root.resize(200, 200)
+  root.add_class("root")
 
-  button = Button.new("Hello world")
-  button.add_class("item")
-
-  button.on_click do | node, event |
-    # p! event
-    button.set_text("Govna")
-  end
-
-  root.append_child(button)
+  header = Header.new
+  header.render(root)
   LibLCUI.lcui_main()
 end
 

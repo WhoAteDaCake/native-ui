@@ -52,9 +52,11 @@ class Widget
     @box.delete(event_id)
   end
 
-  def append_child(widget : Widget)
-    LibLCUI.widget_append(@internal, widget.internal)
-    @children << widget
+  def append_child(*widgets : Widget)
+    widgets.each do |widget|
+      LibLCUI.widget_append(@internal, widget.internal)
+      @children << widget
+    end
   end
 
   def remove_child(widget : Widget)
@@ -77,6 +79,10 @@ class Widget
 
   def remove_class(cname : String)
     LibLCUI.remove_class(@internal, cname)
+  end
+
+  def resize(width : LibC::Float, height : LibC::Float)
+    LibLCUI.widget_resize(@internal, width, height)
   end
 
 end

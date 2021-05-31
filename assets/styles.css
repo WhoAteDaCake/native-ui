@@ -1,8 +1,12 @@
-.item {
-  width: 100px;
-  height: 100px;
+.header {
+  margin: 10px auto 10px auto;
+  width: 250px;
+  height: 32px;
+  display: flex;
 }
 
-.container {
-  display: flex
+.root {
+  height: 100%;
+  width: 100%;
+  display: flex;
 }
