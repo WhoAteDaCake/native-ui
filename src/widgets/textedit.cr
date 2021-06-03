@@ -7,7 +7,7 @@ class TextEdit < Widget
     super("textedit")
   end
 
-  def get_value()
+  def value()
     buffer = Slice(LibLCUI::WcharT).new(@buffer_size)
     LibLCUI.text_edit_get_text_w(@internal, 0, @buffer_size - 1, buffer)
     

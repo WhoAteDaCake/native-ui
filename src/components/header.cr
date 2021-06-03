@@ -1,9 +1,15 @@
 require "../lcui"
+require "./entry"
 
 Lcui.register_sass("
-  .header {
+  .container {
+    display: flex;
+    flex-direction: column;
     margin: 10px auto 10px auto;
     width: 250px;
+  }
+
+  .header {
     height: 32px;
     display: flex;
 
@@ -12,12 +18,20 @@ Lcui.register_sass("
       width: 70px;
     }
   }
+  .content {
+    margin-top: 10px;
+    // Sass seems to have isuses with this
+    // background-color: rgba(0, 0, 255, .99);
+  }
 ")
 
 class Header
   @header : Widget
   @input : TextEdit
   @button : Button
+  @content : Widget
+  @items : Array(Entry)
+  @container: Widget
 
   def initialize()
     @header = Widget.new
@@ -31,13 +45,26 @@ class Header
       on_add
     end
     @header.append_child(@input, @button)
+
+    @content = Widget.new
+    @content.add_class("content")
+    @items = Array(Entry).new
+
+    @container = Widget.new
+    @container.append_child(@header, @content)
+    @container.add_class("container")
+
   end
 
   def on_add()
-    p! @input.get_value
+    text = @input.value
+    if text.size != 0
+      entry = Entry.new(text)
+      entry.mount_on(@container)
+    end
   end
 
   def mount_on(parent : Widget)
-    parent.append_child(@header)
+    parent.append_child(@container)
   end
 end
