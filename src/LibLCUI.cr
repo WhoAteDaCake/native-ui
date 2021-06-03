@@ -9,27 +9,39 @@ lib LibLCUI
   LCUI_DIRENT_NAME_LEN = 256
   union LcuiRgb565
     value : LibC::UShort
+    field_0 : LcuiRgb565Field0
+    field_1 : LcuiRgb565Field1
+  end
+  struct LcuiRgb565Field0
     b : UcharT
     g : UcharT
     r : UcharT
+  end
+  alias UcharT = UInt8
+  struct LcuiRgb565Field1
     blue : UcharT
     green : UcharT
     red : UcharT
   end
-  alias UcharT = UInt8
   union LcuiArgb8888
     value : Int32T
+    field_0 : LcuiArgb8888Field0
+    field_1 : LcuiArgb8888Field1
+  end
+  alias X__Int32T = LibC::Int
+  alias Int32T = X__Int32T
+  struct LcuiArgb8888Field0
     b : UcharT
     g : UcharT
     r : UcharT
     a : UcharT
+  end
+  struct LcuiArgb8888Field1
     blue : UcharT
     green : UcharT
     red : UcharT
     alpha : UcharT
   end
-  alias X__Int32T = LibC::Int
-  alias Int32T = X__Int32T
   struct LcuiPos
     x : LibC::Int
     y : LibC::Int
@@ -69,7 +81,7 @@ lib LibLCUI
     spread : LibC::Float
     color : LcuiColor
   end
-  type LcuiColor = LcuiArgb8888
+  alias LcuiColor = LcuiArgb8888
   struct LcuiBoxShadow
     x : LibC::Int
     y : LibC::Int
@@ -115,8 +127,7 @@ lib LibLCUI
     width : LibC::UInt
     height : LibC::UInt
     quote : LcuiGraphQuote
-    bytes : UcharT*
-    argb : LcuiArgb*
+    field_0 : LcuiGraphField0
     color_type : LcuiColorType
     bytes_per_pixel : LibC::UInt
     bytes_per_row : LibC::UInt
@@ -129,11 +140,18 @@ lib LibLCUI
     left : LibC::Int
     is_valid : LcuiBool
     is_writable : LcuiBool
+    field_0 : LcuiGraphQuoteField0
+  end
+  alias LcuiBool = UInt8
+  union LcuiGraphQuoteField0
     source : LcuiGraph*
     source_ro : LcuiGraph*
   end
-  alias LcuiBool = UInt8
-  type LcuiArgb = LcuiArgb8888
+  union LcuiGraphField0
+    bytes : UcharT*
+    argb : LcuiArgb*
+  end
+  alias LcuiArgb = LcuiArgb8888
     # 色彩模式
 enum LcuiColorType
         # 8位索引
@@ -156,6 +174,26 @@ LcuiColorTypeArgb8888 = 7
   struct LcuiStyleRec
     is_valid : LcuiBool
     type : LcuiStyleType
+    field_0 : LcuiStyleRecField0
+  end
+    # 样式变量类型
+enum LcuiStyleType
+    LcuiStypeNone = 0
+    LcuiStypeAuto = 1
+    LcuiStypeScale = 2
+    LcuiStypePx = 3
+    LcuiStypePt = 4
+    LcuiStypeDip = 5
+    LcuiStypeSp = 6
+    LcuiStypeColor = 7
+    LcuiStypeImage = 8
+    LcuiStypeStyle = 9
+    LcuiStypeInt = 10
+    LcuiStypeBool = 11
+    LcuiStypeString = 12
+    LcuiStypeWstring = 13
+  end
+  union LcuiStyleRecField0
     val_int : LibC::Int
     val_0 : LibC::Int
     val_none : LibC::Int
@@ -183,23 +221,6 @@ LcuiColorTypeArgb8888 = 7
     image : LcuiGraph*
     val_image : LcuiGraph*
     val_bool : LcuiBool
-  end
-    # 样式变量类型
-enum LcuiStyleType
-    LcuiStypeNone = 0
-    LcuiStypeAuto = 1
-    LcuiStypeScale = 2
-    LcuiStypePx = 3
-    LcuiStypePt = 4
-    LcuiStypeDip = 5
-    LcuiStypeSp = 6
-    LcuiStypeColor = 7
-    LcuiStypeImage = 8
-    LcuiStypeStyle = 9
-    LcuiStypeInt = 10
-    LcuiStypeBool = 11
-    LcuiStypeString = 12
-    LcuiStypeWstring = 13
   end
   enum LcuiStyleValue
     SvNone = 0
@@ -273,14 +294,26 @@ justify_content : LcuiStyleValue
   end
   struct LcuiBackgroundPosition
     using_value : LcuiBool
+    field_0 : LcuiBackgroundPositionField0
+    field_1 : LcuiBackgroundPositionField1
+  end
+  struct LcuiBackgroundPositionField0
     x : LcuiStyleRec
     y : LcuiStyleRec
+  end
+  union LcuiBackgroundPositionField1
     value : LibC::Int
   end
   struct LcuiBackgroundSize
     using_value : LcuiBool
+    field_0 : LcuiBackgroundSizeField0
+    field_1 : LcuiBackgroundSizeField1
+  end
+  struct LcuiBackgroundSizeField0
     width : LcuiStyleRec
     height : LcuiStyleRec
+  end
+  union LcuiBackgroundSizeField1
     value : LibC::Int
   end
   struct LcuiBackgroundStyle
@@ -342,7 +375,7 @@ with_alpha : LcuiBool
     present_time : ClockT
     widget_tasks : LcuiWidgetTasksProfileRec
   end
-  type LcuiWidgetTasksProfileRec = LcuiWidgetTasksRec
+  alias LcuiWidgetTasksProfileRec = LcuiWidgetTasksRec
   struct LcuiProfileRec
     start_time : ClockT
     end_time : ClockT
@@ -412,13 +445,13 @@ with_alpha : LcuiBool
     head : LinkedListNode
     tail : LinkedListNode
   end
-  type LinkedList = LinkedListRec
+  alias LinkedList = LinkedListRec
   struct LinkedListNodeRec
     data : Void*
     prev : LinkedListNode*
     next : LinkedListNode*
   end
-  type LinkedListNode = LinkedListNodeRec
+  alias LinkedListNode = LinkedListNodeRec
   alias LcuiObjectWatcherRec = Void
     # 根据容器尺寸，获取指定区域中需要裁剪的区域
 fun lcui_rect_get_cut_area = LCUIRect_GetCutArea(box_w : LibC::Int, box_h : LibC::Int, rect : LcuiRect, cut : LcuiRect*)
@@ -462,17 +495,20 @@ handlers : RbTree
     destroy : (Void* -> Void)
     root : RbTreeNode*
   end
-  type RbTree = RbTreeRec
+  alias RbTree = RbTreeRec
   struct RbTreeNodeRec
     color : UInt8
     key : LibC::Int
-    data : Void*
-    str : LibC::Char*
+    field_0 : RbTreeNodeRecField0
     parent : RbTreeNode*
     left : RbTreeNode*
     right : RbTreeNode*
   end
-  type RbTreeNode = RbTreeNodeRec
+  alias RbTreeNode = RbTreeNodeRec
+  union RbTreeNodeRecField0
+    data : Void*
+    str : LibC::Char*
+  end
   struct LcuiTaskRec
         # 任务处理函数
 func : LcuiTaskFunc
@@ -533,6 +569,11 @@ shift_key : LcuiBool
   struct LcuiSysEventRec
     type : Uint32T
     data : Void*
+    field_0 : LcuiSysEventRecField0
+  end
+  alias X__Uint32T = LibC::UInt
+  alias Uint32T = X__Uint32T
+  union LcuiSysEventRecField0
     motion : LcuiMouseMotionEvent
     button : LcuiMouseButtonEvent
     wheel : LcuiMouseWheelEvent
@@ -541,8 +582,6 @@ shift_key : LcuiBool
     touch : LcuiTouchEvent
     paint : LcuiPaintEvent
   end
-  alias X__Uint32T = LibC::UInt
-  alias Uint32T = X__Uint32T
   struct LcuiAppDriverRec
     id : LcuiAppDriverId
     process_events : ( -> Void)
@@ -629,7 +668,7 @@ fun lcui_is_on_main_loop = LCUI_IsOnMainLoop : LcuiBool
     __prev : X__PthreadInternalList*
     __next : X__PthreadInternalList*
   end
-  type X__PthreadListT = X__PthreadInternalList
+  alias X__PthreadListT = X__PthreadInternalList
   fun lcui_mutex_destroy = LCUIMutex_Destroy(mutex : LcuiMutex*)
   fun lcui_mutex_try_lock = LCUIMutex_TryLock(mutex : LcuiMutex*) : LibC::Int
   fun lcui_mutex_lock = LCUIMutex_Lock(mutex : LcuiMutex*) : LibC::Int
@@ -643,25 +682,31 @@ fun lcui_cond_init = LCUICond_Init(cond : LcuiCond*) : LibC::Int
   end
   alias LcuiCond = PthreadCondT
   struct X__PthreadCondS
-    __wseq : LibC::ULongLong
-    __wseq32 : X__PthreadCondSWseq32
-    __g1_start : LibC::ULongLong
-    __low : LibC::UInt
-    __high : LibC::UInt
-    __g1_start32 : X__PthreadCondSG1Start32
+    field_0 : X__PthreadCondSField0
+    field_1 : X__PthreadCondSField1
+    field_2 : X__PthreadCondSField2
+    field_3 : X__PthreadCondSField3
     __g_refs : LibC::UInt[2]
     __g_size : LibC::UInt[2]
     __g1_orig_size : LibC::UInt
     __wrefs : LibC::UInt
     __g_signals : LibC::UInt[2]
   end
-  struct X__PthreadCondSWseq32
+  struct X__PthreadCondSField0
     __low : LibC::UInt
     __high : LibC::UInt
   end
-  struct X__PthreadCondSG1Start32
+  union X__PthreadCondSField1
+    __wseq : LibC::ULongLong
+    __wseq32 : X__PthreadCondSField0
+  end
+  struct X__PthreadCondSField2
     __low : LibC::UInt
     __high : LibC::UInt
+  end
+  union X__PthreadCondSField3
+    __g1_start : LibC::ULongLong
+    __g1_start32 : X__PthreadCondSField2
   end
     # 销毁一个条件变量
 fun lcui_cond_destroy = LCUICond_Destroy(cond : LcuiCond*) : LibC::Int
@@ -770,7 +815,7 @@ fun lcui_find_style_sheet_from_group = LCUI_FindStyleSheetFromGroup(group : LibC
     LcuiSizingRulePercent = 3
     LcuiSizingRuleFitContent = 4
   end
-  type LcuiFlexBoxLayoutStyle = LcuiFlexLayoutStyle
+  alias LcuiFlexBoxLayoutStyle = LcuiFlexLayoutStyle
   struct LcuiWidgetActualStyleRec
     x : LibC::Float
     y : LibC::Float
@@ -994,6 +1039,9 @@ on_update_progress : (LcuiWidget, LibC::SizeT -> Void)
   struct LcuiWidgetAttributeRecValue
     type : LibC::Int
     destructor : (Void* -> Void)
+    field_0 : LcuiWidgetAttributeRecValueField0
+  end
+  union LcuiWidgetAttributeRecValueField0
     string : LibC::Char*
     data : Void*
   end
@@ -1161,6 +1209,9 @@ data : Void*
 target : LcuiWidget
         # 是否取消事件冒泡
 cancel_bubble : LcuiBool
+    field_0 : LcuiWidgetEventRecField0
+  end
+  union LcuiWidgetEventRecField0
     motion : LcuiWidgetMouseMotionEvent
     button : LcuiWidgetMouseButtonEvent
     wheel : LcuiWidgetMouseWheelEvent
