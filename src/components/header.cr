@@ -32,6 +32,7 @@ class Header
   @content : Widget
   @items : Array(Entry)
   @container: Widget
+  @idx : Int16 = 0
 
   def initialize()
     @header = Widget.new
@@ -53,14 +54,33 @@ class Header
     @container = Widget.new
     @container.append_child(@header, @content)
     @container.add_class("container")
+  end
 
+  def on_remove(id : Int16)
+    items, found = @items.reduce({[] of Entry, nil}) do |acc,e|
+      ls, f = acc
+      if e.id == id
+        {ls, e}
+      else
+        ls << e
+        {ls, f}
+      end
+    end
+    @items = items
+    if found
+      found.unmount_of(@container)
+    end
   end
 
   def on_add()
     text = @input.value
     if text.size != 0
-      entry = Entry.new(text)
+      entry = Entry.new(text, @idx)
+      entry.on_remove {|id| on_remove id}
+      @idx += 1
       entry.mount_on(@container)
+      @items << entry
+
     end
   end
 

@@ -62,7 +62,7 @@ class Widget
   def remove_child(widget : Widget)
     LibLCUI.widget_unlink(widget.internal)
     @children.select! do | child |
-      child.value.hash != widget.value.hash
+      child.internal.value.hash != widget.internal.value.hash
     end
   end
 
