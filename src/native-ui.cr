@@ -1,5 +1,6 @@
 require "./LibLCUI"
 require "./widgets/*"
+require "./context/**"
 require "./components/*"
 require "./lcui"
 
@@ -16,6 +17,11 @@ Lcui.register_css("
     height: 100%;
     width: 100%;
     display: flex;
+    flex-direction: column;
+
+    &__button {
+      height: 20px
+    }
   }
 ")
 
@@ -24,6 +30,28 @@ Lcui.run do
   root.resize(200, 200)
   root.add_class("root")
 
-  header = Header.new
-  header.mount_on(root)
+  page1 = TextView.new
+  page1.set_text("page1")
+
+  page2 = TextView.new
+  page2.set_text("page2")
+
+  ctx = GLOBAL_ROUTER
+  router = Router.new(ctx)
+  router.routes["/"] = page1
+  router.routes["/page2"] = page2
+  
+  button = Button.new("Change page")
+  button.add_class("root__button")
+  button.on_click do |w,e|
+    puts "Switching #{ctx.state}"
+    ctx.update "/page2"
+  end
+
+  
+  root.append_child(button)
+  router.mount_on(root)
+
+  # header = Header.new
+  # header.mount_on(root)
 end

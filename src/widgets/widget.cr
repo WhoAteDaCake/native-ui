@@ -50,10 +50,6 @@ class Widget
     LibLCUI.widget_destroy(@internal)
   end
 
-  def set_text(text : String)
-    LibLCUI.text_view_set_text(@internal, text)
-  end
-
   def bind_event(event : String, callback : Lcui::EventCallback)
     boxed_data = Box.box(callback)
     event_id = LibLCUI.widget_bind_event(internal, event, ->(me, event, _data) {
@@ -78,6 +74,7 @@ class Widget
     @children.select! do | child |
       child.hash != widget.hash
     end
+    LibLCUI.widget_unlink(widget.internal)
   end
 
   def add_class(cname : String)

@@ -1,8 +1,9 @@
 require "../LibLCUI.cr"
 require "../lcui.cr"
 require "./widget"
+require "./textview"
 
-class Button < Widget
+class Button < TextView
   def initialize(text : String)
     super("button")
     set_text(text)
