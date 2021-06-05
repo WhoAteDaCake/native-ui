@@ -22,6 +22,21 @@ module Lcui
   alias UcharT = LibLCUI::UcharT
   alias Color = LibLCUI::LcuiArgb8888
 
+  def self.run(& : -> )
+    LibLCUI.lcui_init()
+    Lcui.load_css()
+  
+    yield
+  
+    LibLCUI.lcui_thread_create(out tid, ->(u_ : Void*) {
+      LibLCUI.lcui_main
+    }, nil)
+  
+    sleep
+    LibLCUI.lcui_quit
+    LibLCUI.lcui_thread_join(tid, nil)
+  end
+
   def self.rgba(r : UcharT, g : UcharT, b : UcharT, a : UcharT)
     color = LibLCUI::LcuiArgb8888.new
     rgb = LibLCUI::LcuiArgb8888Field1.new

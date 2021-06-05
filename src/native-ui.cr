@@ -19,24 +19,11 @@ Lcui.register_css("
   }
 ")
 
-def main()
-  LibLCUI.lcui_init()
-  Lcui.load_css()
-
+Lcui.run do
   root = Widget.root()
   root.resize(200, 200)
   root.add_class("root")
 
   header = Header.new
   header.mount_on(root)
-
-  LibLCUI.lcui_thread_create(out tid, ->(u_ : Void*) {
-    LibLCUI.lcui_main
-  }, nil)
-
-  sleep
-  LibLCUI.lcui_quit
-  LibLCUI.lcui_thread_join(tid, nil)
 end
-
-main()
