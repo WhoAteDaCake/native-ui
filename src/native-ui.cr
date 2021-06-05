@@ -30,8 +30,12 @@ Lcui.run do
   root.resize(200, 200)
   root.add_class("root")
 
-  page1 = TextView.new
-  page1.set_text("page1")
+  # page1 = TextView.new
+  # page1.set_text("page1")
+  header = Header.new
+  page1 = Widget.new
+  header.mount_on(page1) 
+
 
   page2 = TextView.new
   page2.set_text("page2")
@@ -44,8 +48,14 @@ Lcui.run do
   button = Button.new("Change page")
   button.add_class("root__button")
   button.on_click do |w,e|
-    puts "Switching #{ctx.state}"
-    ctx.update "/page2"
+    changed =
+      if ctx.state == "/"
+        "/page2"
+      else
+        "/"
+      end
+    puts "Switching #{ctx.state} -> #{changed}"
+    ctx.update changed
   end
 
   
