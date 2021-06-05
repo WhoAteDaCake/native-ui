@@ -5,6 +5,13 @@
 @[Link(ldflags: "-I#{__DIR__}/../LCUI/include")]
 @[Link(ldflags: "-I#{__DIR__}/../LCUI/")]
 lib LibLCUI
+  # Custom
+  struct LCUI_MainLoopRec
+    state : LibC::Int
+    tid : LcuiThread
+  end
+  alias LCUI_MainLoop = LCUI_MainLoopRec*
+
   LCUI_MAX_FRAMES_PER_SEC = 120
   LCUI_DIRENT_NAME_LEN = 256
   union LcuiRgb565

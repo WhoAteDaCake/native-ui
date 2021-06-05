@@ -2,13 +2,16 @@ require "../LibLCUI.cr"
 require "../lcui.cr"
 
 class Widget
+  @@id : Int64 = 0
   alias EventHash = Hash(LibC::Int, Pointer(Void))
 
   property internal : LibLCUI::LcuiWidget
+  property id : Int64
   @box: EventHash
   @children : Array(Widget)
-
-   def self.root()
+  @cleared : Bool = false
+  
+  def self.root()
     Widget.new(LibLCUI.lcui_widget_get_root())
   end
 
@@ -16,6 +19,8 @@ class Widget
     @internal = internal
     @box = EventHash.new
     @children = Array(Widget).new
+    @id = @@id
+    @@id += 1
   end
 
   def initialize(proto_name : String)
@@ -27,11 +32,16 @@ class Widget
   end
 
   def finalize
-    remove_all_children
-    @box.each do |key, value|
-      unbind_event(key)
-    end
-    LibLCUI.widget_destroy(@internal)
+    puts "Finalize"
+    destroy
+  end
+
+  def destroy
+    return if @cleared
+    @cleared = true
+    @children.clear
+    @box.clear
+    Lcui::Widget.destroy(@internal)
   end
 
   def set_text(text : String)
@@ -48,7 +58,6 @@ class Widget
   end
 
   def unbind_event(event_id : LibC::Int)
-    LibLCUI.lcui_unbind_event(event_id)
     @box.delete(event_id)
   end
 
@@ -59,18 +68,10 @@ class Widget
     end
   end
 
-  def remove_child(widget : Widget)
-    LibLCUI.widget_unlink(widget.internal)
+  def unmount_child(widget : Widget)
     @children.select! do | child |
-      child.internal.value.hash != widget.internal.value.hash
+      child.hash != widget.hash
     end
-  end
-
-  def remove_all_children()
-    @children.each do | child |
-      LibLCUI.widget_unlink(child.internal)
-    end
-    @children.clear
   end
 
   def add_class(cname : String)

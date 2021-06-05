@@ -30,7 +30,13 @@ def main()
   header = Header.new
   header.mount_on(root)
 
-  LibLCUI.lcui_main()
+  LibLCUI.lcui_thread_create(out tid, ->(u_ : Void*) {
+    LibLCUI.lcui_main
+  }, nil)
+
+  sleep
+  LibLCUI.lcui_quit
+  LibLCUI.lcui_thread_join(tid, nil)
 end
 
 main()

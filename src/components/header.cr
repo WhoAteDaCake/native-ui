@@ -30,7 +30,7 @@ class Header
   @input : TextEdit
   @button : Button
   @content : Widget
-  @items : Array(Entry)
+  property items : Array(Entry)
   @container: Widget
   @idx : Int16 = 0
 
@@ -43,7 +43,7 @@ class Header
     @button.add_class("header__button")
 
     @button.on_click do |w, e|
-      on_add
+      on_add @input.value
     end
     @header.append_child(@input, @button)
 
@@ -56,7 +56,7 @@ class Header
     @container.add_class("container")
   end
 
-  def on_remove(id : Int16)
+  def on_remove(id : Int64)
     items, found = @items.reduce({[] of Entry, nil}) do |acc,e|
       ls, f = acc
       if e.id == id
@@ -72,15 +72,12 @@ class Header
     end
   end
 
-  def on_add()
-    text = @input.value
+  def on_add(text : String)
     if text.size != 0
-      entry = Entry.new(text, @idx)
-      entry.on_remove {|id| on_remove id}
-      @idx += 1
+      entry = Entry.new(text)
+      entry.on_remove ->on_remove(Int64)
       entry.mount_on(@container)
       @items << entry
-
     end
   end
 
