@@ -41,7 +41,13 @@ class Widget
     @cleared = true
     @children.clear
     @box.clear
-    Lcui::Widget.destroy(@internal)
+    # Performs the following actions
+    # - If: widget is not mounted to the tree: Widget_ExecDestroy
+    # - Update sibling indices attached to parent
+    # - If: position isn't absolute, Widget_AddTask(w->parent, LCUI_WTASK_REFLOW);
+    # - Widget_InvalidateArea
+    # - Widget_Destroy
+    LibLCUI.widget_destroy(@internal)
   end
 
   def set_text(text : String)
@@ -85,5 +91,4 @@ class Widget
   def resize(width : LibC::Float, height : LibC::Float)
     LibLCUI.widget_resize(@internal, width, height)
   end
-
 end

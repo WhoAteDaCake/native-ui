@@ -69,16 +69,4 @@ module Lcui
     end
     @@css.clear
   end
-
-  module Widget
-    # Performs the following actions
-    # - If: widget is not mounted to the tree: Widget_ExecDestroy
-    # - Update sibling indices attached to parent
-    # - If: position isn't absolute, Widget_AddTask(w->parent, LCUI_WTASK_REFLOW);
-    # - Widget_InvalidateArea
-    # - Widget_Destroy
-    def self.destroy(w : LibLCUI::LcuiWidget)
-      LibLCUI.widget_destroy(w)
-    end
-  end
 end
