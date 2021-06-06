@@ -21,6 +21,7 @@ module Lcui
   alias EventCallback = (LibLCUI::LcuiWidgetRec, LibLCUI::LcuiWidgetEventRec) ->
   alias UcharT = LibLCUI::UcharT
   alias Color = LibLCUI::LcuiArgb8888
+  alias WindowPos = LibLCUI::LcuiRect2F
 
   def self.run(& : -> )
     LibLCUI.lcui_init()

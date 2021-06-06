@@ -2,7 +2,12 @@ require "./LibLCUI"
 require "./widgets/*"
 require "./context/**"
 require "./components/*"
+require "./utils/*"
 require "./lcui"
+
+
+require "./crymail/*"
+require "./pages/*"
 
 # Notes
 # - LCUIWidget_NewPrototype -> Creates new widget [widget_prototype.c] (125)
@@ -11,6 +16,13 @@ require "./lcui"
 # - LCUI_WidgetPrototypeModule -> where models are stored [widget_prototype.c] (38)
 # - ParseResource -> Parses HTML code [builder.c] (95)
 # - LCUIWidget_New -> Create widget [widget_base.c] (174)
+
+Log.setup(:debug, backend: Log::IOBackend.new(dispatcher: Log::DispatchMode::Direct))
+Logger = Log.for("crymail", :debug)
+Logger.info { "Running at version: [#{Crymail::VERSION}]"}
+
+storage = Storage.new("./data")
+auth = Auth.new(storage)
 
 Lcui.register_css("
   .root {
@@ -25,10 +37,21 @@ Lcui.register_css("
   }
 ")
 
+
 Lcui.run do
   root = Widget.root()
-  root.resize(200, 200)
   root.add_class("root")
+
+  window = Window.new(storage, root)
+  window.sync_widget
+  root.bind_event("resize", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
+    # p! e
+    puts "resize"
+  })
+
+  root.bind_event("surface", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
+    puts "surface"
+  })
 
   # page1 = TextView.new
   # page1.set_text("page1")
@@ -61,7 +84,4 @@ Lcui.run do
   
   root.append_child(button)
   router.mount_on(root)
-
-  # header = Header.new
-  # header.mount_on(root)
 end

@@ -88,4 +88,8 @@ class Widget
   def resize(width : LibC::Float, height : LibC::Float)
     LibLCUI.widget_resize(@internal, width, height)
   end
+
+  def move(x : LibC::Float, y : LibC::Float)
+    LibLCUI.widget_resize(@internal, x, y)
+  end
 end
