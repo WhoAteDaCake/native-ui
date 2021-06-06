@@ -28,6 +28,8 @@ Lcui.register_css("
   .root {
     height: 100%;
     width: 100%;
+    left: 20px;
+    top: 100px;
     display: flex;
     flex-direction: column;
 
@@ -37,24 +39,23 @@ Lcui.register_css("
   }
 ")
 
-
 Lcui.run do
   root = Widget.root()
   root.add_class("root")
 
   window = Window.new(storage, root)
-  window.sync_widget
+  window.sync_widget(window.position)
   root.bind_event("resize", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
-    # p! e
-    puts "resize"
+    p = window.position
+    width = LibLCUI.lcui_display_get_width
+    height = LibLCUI.lcui_display_get_height
+    if p.width != width && p.height != height
+      p = p.update_size(width, height)
+      window.update_position(p)
+      window.sync_widget(p)
+    end
   })
 
-  root.bind_event("surface", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
-    puts "surface"
-  })
-
-  # page1 = TextView.new
-  # page1.set_text("page1")
   header = Header.new
   page1 = Widget.new
   header.mount_on(page1) 

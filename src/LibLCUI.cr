@@ -5,13 +5,6 @@
 @[Link(ldflags: "-I#{__DIR__}/../LCUI/include")]
 @[Link(ldflags: "-I#{__DIR__}/../LCUI/")]
 lib LibLCUI
-  # Custom
-  struct LCUI_MainLoopRec
-    state : LibC::Int
-    tid : LcuiThread
-  end
-  alias LCUI_MainLoop = LCUI_MainLoopRec*
-
   LCUI_MAX_FRAMES_PER_SEC = 120
   LCUI_DIRENT_NAME_LEN = 256
   union LcuiRgb565
@@ -653,6 +646,43 @@ fun lcui_quit = LCUI_Quit
 fun lcui_exit = LCUI_Exit(code : LibC::Int)
     # 检测当前是否在主线程上
 fun lcui_is_on_main_loop = LCUI_IsOnMainLoop : LcuiBool
+  struct LcuiMetricsRec
+    dpi : LibC::Float
+    density : LibC::Float
+    scaled_density : LibC::Float
+    scale : LibC::Float
+  end
+    # 转换成单位为 px 的度量值
+fun lcui_metrics_compute = LCUIMetrics_Compute(value : LibC::Float, type : LcuiStyleType) : LibC::Float
+  fun lcui_metrics_compute_style = LCUIMetrics_ComputeStyle(style : LcuiStyle) : LibC::Float
+  alias LcuiStyle = LcuiStyleRec*
+    # 将矩形中的度量值的单位转换为 px
+fun lcui_metrics_compute_rect_actual = LCUIMetrics_ComputeRectActual(dst : LcuiRect*, src : LcuiRectF*)
+    # 转换成单位为 px 的实际度量值
+fun lcui_metrics_compute_actual = LCUIMetrics_ComputeActual(value : LibC::Float, type : LcuiStyleType) : LibC::Int
+    # 获取当前的全局缩放比例
+fun lcui_metrics_get_scale = LCUIMetrics_GetScale : LibC::Float
+    # 设置密度
+fun lcui_metrics_set_density = LCUIMetrics_SetDensity(density : LibC::Float)
+    # 设置缩放密度
+fun lcui_metrics_set_scaled_density = LCUIMetrics_SetScaledDensity(density : LibC::Float)
+    # 设置密度等级
+fun lcui_metrics_set_density_level = LCUIMetrics_SetDensityLevel(level : LcuiDensityLevel)
+  enum LcuiDensityLevel
+    DensityLevelSmall = 0
+    DensityLevelNormal = 1
+    DensityLevelLarge = 2
+    DensityLevelBig = 3
+  end
+    # 设置缩放密度等级
+fun lcui_metrics_set_scaled_density_level = LCUIMetrics_SetScaledDensityLevel(level : LcuiDensityLevel)
+    # 设置 DPI
+fun lcui_metrics_set_dpi = LCUIMetrics_SetDpi(dpi : LibC::Float)
+    # 设置全局缩放比例
+fun lcui_metrics_set_scale = LCUIMetrics_SetScale(scale : LibC::Float)
+  fun lcui_init_metrics = LCUI_InitMetrics
+  fun lcui_get_metrics = LCUI_GetMetrics : LcuiMetricsRec*
+  fun lcui_free_metrics = LCUI_FreeMetrics
   fun lcui_over_pixel = LCUI_OverPixel(dst : LcuiArgb*, src : LcuiArgb*)
   fun lcui_mutex_init = LCUIMutex_Init(mutex : LcuiMutex*) : LibC::Int
   union PthreadMutexT
@@ -736,7 +766,6 @@ fun lcui_cond_broadcast = LCUICond_Broadcast(cond : LcuiCond*) : LibC::Int
     sheet : LcuiStyle
     length : LibC::Int
   end
-  alias LcuiStyle = LcuiStyleRec*
   struct LcuiStyleListNodeRec
     key : LibC::Int
     style : LcuiStyleRec
@@ -1319,6 +1348,85 @@ fun widget_get_selector = Widget_GetSelector(w : LcuiWidget) : LcuiSelector
 fun widget_get_children_style_changes = Widget_GetChildrenStyleChanges(w : LcuiWidget, type : LibC::Int, name : LibC::Char*) : LibC::SizeT
   fun lcui_init_widget = LCUI_InitWidget
   fun lcui_free_widget = LCUI_FreeWidget
+  struct LcuiMinMaxInfoRec
+    min_width : LibC::Int
+    min_height : LibC::Int
+    max_width : LibC::Int
+    max_height : LibC::Int
+  end
+  struct LcuiDisplayEventRec
+    type : LibC::Int
+    field_0 : LcuiDisplayEventRecField0
+    field_1 : LcuiDisplayEventRecField1
+    field_2 : LcuiDisplayEventRecField2
+    surface : LcuiSurface
+  end
+  struct LcuiDisplayEventRecField0
+    rect : LcuiRect
+  end
+  struct LcuiDisplayEventRecField1
+    width : LibC::Int
+    height : LibC::Int
+  end
+  union LcuiDisplayEventRecField2
+    paint : LcuiDisplayEventRecField0
+    resize : LcuiDisplayEventRecField1
+    minmaxinfo : LcuiMinMaxInfoRec
+  end
+  alias LcuiSurface = Void*
+  struct LcuiDisplayDriverRec
+    name : LibC::Char[256]
+    get_width : ( -> LibC::Int)
+    get_height : ( -> LibC::Int)
+    create : ( -> LcuiSurface)
+    destroy : (LcuiSurface -> Void)
+    close : (LcuiSurface -> Void)
+    resize : (LcuiSurface, LibC::Int, LibC::Int -> Void)
+    move : (LcuiSurface, LibC::Int, LibC::Int -> Void)
+    show : (LcuiSurface -> Void)
+    hide : (LcuiSurface -> Void)
+    update : (LcuiSurface -> Void)
+    present : (LcuiSurface -> Void)
+    is_ready : (LcuiSurface -> LcuiBool)
+    begin_paint : (LcuiSurface, LcuiRect* -> LcuiPaintContext)
+    end_paint : (LcuiSurface, LcuiPaintContext -> Void)
+    set_caption_w : (LcuiSurface, WcharT* -> Void)
+    set_render_mode : (LcuiSurface, LibC::Int -> Void)
+    get_handle : (LcuiSurface -> Void)
+    get_surface_width : (LcuiSurface -> LibC::Int)
+    get_surface_height : (LcuiSurface -> LibC::Int)
+    set_opacity : (LcuiSurface, LibC::Float -> Void)
+    bind_event : (LibC::Int, LcuiEventFunc, Void*, (Void* -> Void) -> LibC::Int)
+  end
+  fun lcui_display_set_mode = LCUIDisplay_SetMode(mode : LibC::Int) : LibC::Int
+    # 获取屏幕显示模式
+fun lcui_display_get_mode = LCUIDisplay_GetMode : LibC::Int
+    # 更新各种图形元素
+fun lcui_display_update = LCUIDisplay_Update
+    # 渲染内容
+fun lcui_display_render = LCUIDisplay_Render : LibC::SizeT
+    # 呈现渲染后的内容
+fun lcui_display_present = LCUIDisplay_Present
+  fun lcui_display_enable_paint_flashing = LCUIDisplay_EnablePaintFlashing(enable : LcuiBool)
+    # 设置显示区域的尺寸，仅在窗口化、全屏模式下有效
+fun lcui_display_set_size = LCUIDisplay_SetSize(width : LibC::Int, height : LibC::Int)
+    # 获取屏幕宽度
+fun lcui_display_get_width = LCUIDisplay_GetWidth : LibC::Int
+    # 获取屏幕高度
+fun lcui_display_get_height = LCUIDisplay_GetHeight : LibC::Int
+    # 添加无效区域
+fun lcui_display_invalidate_area = LCUIDisplay_InvalidateArea(rect : LcuiRect*)
+    # 获取当前部件所属的 surface
+fun lcui_display_get_surface_owner = LCUIDisplay_GetSurfaceOwner(w : LcuiWidget) : LcuiSurface
+    # 根据 handle 获取 surface
+fun lcui_display_get_surface_by_handle = LCUIDisplay_GetSurfaceByHandle(handle : Void*) : LcuiSurface
+    # 绑定 surface 触发的事件
+fun lcui_display_bind_event = LCUIDisplay_BindEvent(event_id : LibC::Int, func : LcuiEventFunc, arg : Void*, data : Void*, destroy_data : (Void* -> Void)) : LibC::Int
+    # 初始化图形输出模块
+fun lcui_init_display = LCUI_InitDisplay(driver : LcuiDisplayDriver) : LibC::Int
+  alias LcuiDisplayDriver = LcuiDisplayDriverRec*
+    # 停用图形输出模块
+fun lcui_free_display = LCUI_FreeDisplay : LibC::Int
     # 从字符串中载入界面配置代码，解析并生成相应的图形界面(元素)
 fun lcui_builder_load_string = LCUIBuilder_LoadString(str : LibC::Char*, size : LibC::Int) : LcuiWidget
     # 从文件中载入界面配置代码，解析并生成相应的图形界面(元素)

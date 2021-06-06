@@ -13,7 +13,7 @@ class Storage
 
   def initialize(path : String)
     path = Path[path].join(DB_FILE).expand
-    File.delete(path)
+    # File.delete(path)
     
     init = false
     if !File.exists?(path)

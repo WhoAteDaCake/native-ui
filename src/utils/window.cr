@@ -8,28 +8,33 @@ class Window
     property x, y, width, height
 
     def initialize(
-      @x : LibC::Float,
-      @y : LibC::Float,
-      @width : LibC::Float,
-      @height : LibC::Float
+      @x : LibC::Int,
+      @y : LibC::Int,
+      @width : LibC::Int,
+      @height : LibC::Int
     )
     end
-  end
 
+    def update_size(width : LibC::Int, height : LibC::Int)
+      @width = width
+      @height = height
+      self
+    end
+  end
 
   @storage : Storage
   @root : Widget
 
   def initialize(@storage : Storage, @root : Widget)
     if @storage.should_init
-      init (Position.new(200, 200, 0, 0))
+      init (Position.new(0, 0, 400, 400))
     end
   end
 
   def init(pos)
     Logger.info { "Initialising size table" }
     @storage.conn.exec "
-      create table sizes (x float, y float, width float, height float)"
+      create table sizes (x int, y int, width int, height int)"
     update_position pos
   end
 
@@ -49,15 +54,14 @@ class Window
   end
 
   def position()
-    x, y, width, height = @storage.conn.query_one "select x, y, width, height from sizes", as: {LibC::Float, LibC::Float, LibC::Float, LibC::Float}
+    x, y, width, height = @storage.conn.query_one "select x, y, width, height from sizes", as: {LibC::Int, LibC::Int, LibC::Int, LibC::Int}
     Position.new(x, y, width, height)
   end
 
-  def sync_widget()
+  def sync_widget(p : Position)
     Logger.debug { "Syncing widget" }
-    p = position
-    @root.resize(p.width, p.height)
-    @root.move(p.x, p.y)
+    @root.resize(p.width.to_f32, p.height.to_f32)
+    # TODO: move command
   end
 
 end
