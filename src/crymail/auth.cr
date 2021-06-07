@@ -92,6 +92,7 @@ class Auth
   end
 
   def retrieve_auth_response()
+    Logger.info { "Starting server for auth response" }
     channel = Channel(Token).new
 
     server = HTTP::Server.new do |context|
@@ -109,9 +110,11 @@ class Auth
     
     address = server.bind_tcp PORT
     spawn do
+      Logger.info { "Spawning server" }
       server.listen
     end
 
+    Logger.info { "Waiting for response" }
     output = channel.receive
     server.close
     output
@@ -155,12 +158,19 @@ class Auth
     end
   end
 
-  def login()
+  def load_token()
     @token = from_storage()
-    if @token.nil?
+  end
+
+  def not_loaded()
+    @token.nil?
+  end
+
+  def login()
+    if not_loaded
       Logger.info { "Token not found requesting auth" }
       # TODO: support different browsers ?
-      Process.run("xdg-open", [REQUEST_URL])
+      Process.new("xdg-open", [REQUEST_URL])
       token = retrieve_auth_response()
       save_token(token)
     end

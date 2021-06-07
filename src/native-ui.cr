@@ -23,19 +23,12 @@ Logger.info { "Running at version: [#{Crymail::VERSION}]"}
 
 storage = Storage.new("./data")
 auth = Auth.new(storage)
+auth.load_token
 
 Lcui.register_css("
   .root {
     height: 100%;
     width: 100%;
-    left: 20px;
-    top: 100px;
-    display: flex;
-    flex-direction: column;
-
-    &__button {
-      height: 20px
-    }
   }
 ")
 
@@ -58,32 +51,30 @@ Lcui.run do
     pos.update_size(width, height)
   })
 
-  header = Header.new
-  page1 = Widget.new
-  header.mount_on(page1) 
+  # header = Header.new
+  # page1 = Widget.new
+  # header.mount_on(page1) 
 
 
   page2 = TextView.new
   page2.set_text("page2")
 
+  login_page = LoginPage.new
+
   ctx = GLOBAL_ROUTER
   router = Router.new(ctx)
-  router.routes["/"] = page1
-  router.routes["/page2"] = page2
-  
-  button = Button.new("Change page")
-  button.add_class("root__button")
-  button.on_click do |w,e|
-    changed =
-      if ctx.state == "/"
-        "/page2"
-      else
-        "/"
-      end
-    puts "Switching #{ctx.state} -> #{changed}"
-    ctx.update changed
+  router.routes["/"] = login_page.container
+  router.routes["/emails"] = page2
+
+  if ! auth.not_loaded
+    ctx.update "/emails"
   end
 
-  root.append_child(button)
+  # TODO: should unbind 
+  login_page.button.bind_event("click", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
+    auth.login
+    ctx.update "/emails"
+  })
+
   router.mount_on(root)
 end

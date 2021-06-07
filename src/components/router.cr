@@ -1,3 +1,13 @@
+require "../lcui"
+
+Lcui.register_sass("
+  .router_container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+")
+
 class Router
   property routes : Hash(String, Widget)
   property container : Widget
@@ -8,6 +18,7 @@ class Router
   def initialize(@ctx : RouterContext)
     @listener_id = @ctx.listen ->on_change(String)
     @container = Widget.new
+    @container.add_class("router_container")
     @routes = Hash(String, Widget).new
   end
 

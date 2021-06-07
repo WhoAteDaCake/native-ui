@@ -4,4 +4,4 @@
 fwatcher --all-events \
   --dir src \
   -x \
-  execute shards build --debug native-ui
+  execute shards build --no-debug native-ui
