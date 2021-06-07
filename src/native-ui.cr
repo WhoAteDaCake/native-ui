@@ -39,21 +39,23 @@ Lcui.register_css("
   }
 ")
 
+
 Lcui.run do
   root = Widget.root()
   root.add_class("root")
 
   window = Window.new(storage, root)
-  window.sync_widget(window.position)
+  pos = window.position
+  window.sync_widget(pos)
+
+  root.bind_event("destroy", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
+    window.update_position pos
+  })
+
   root.bind_event("resize", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
-    p = window.position
     width = LibLCUI.lcui_display_get_width
     height = LibLCUI.lcui_display_get_height
-    if p.width != width && p.height != height
-      p = p.update_size(width, height)
-      window.update_position(p)
-      window.sync_widget(p)
-    end
+    pos.update_size(width, height)
   })
 
   header = Header.new
@@ -82,7 +84,6 @@ Lcui.run do
     ctx.update changed
   end
 
-  
   root.append_child(button)
   router.mount_on(root)
 end

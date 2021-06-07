@@ -4,7 +4,7 @@ require "../crymail/storage"
 class Window
   Logger = Log.for("window", :debug)
 
-  struct Position
+  class Position
     property x, y, width, height
 
     def initialize(
@@ -18,7 +18,6 @@ class Window
     def update_size(width : LibC::Int, height : LibC::Int)
       @width = width
       @height = height
-      self
     end
   end
 
