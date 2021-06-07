@@ -29,13 +29,12 @@ module Lcui
   
     yield
   
-    LibLCUI.lcui_thread_create(out tid, ->(u_ : Void*) {
+    LibLCUI.lcui_thread_create(out tid, ->(data : Void*) {
       LibLCUI.lcui_main
     }, nil)
-  
-    sleep
-    LibLCUI.lcui_quit
+
     LibLCUI.lcui_thread_join(tid, nil)
+    LibLCUI.lcui_quit
   end
 
   def self.rgba(r : UcharT, g : UcharT, b : UcharT, a : UcharT)
