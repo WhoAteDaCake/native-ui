@@ -51,28 +51,24 @@ Lcui.run do
     pos.update_size(width, height)
   })
 
-  # header = Header.new
-  # page1 = Widget.new
-  # header.mount_on(page1) 
 
-
-  page2 = TextView.new
-  page2.set_text("page2")
-
+  overview_page = OverviewPage.new
   login_page = LoginPage.new
 
   ctx = GLOBAL_ROUTER
   router = Router.new(ctx)
   router.routes["/"] = login_page.container
-  router.routes["/emails"] = page2
+  router.routes["/emails"] = overview_page.container
 
   if ! auth.not_loaded
+    overview_page.introduce_auth(auth)
     ctx.update "/emails"
   end
 
   # TODO: should unbind 
   login_page.button.bind_event("click", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
     auth.login
+    overview_page.introduce_auth(auth)
     ctx.update "/emails"
   })
 

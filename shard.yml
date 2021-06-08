@@ -19,5 +19,7 @@ dependencies:
     github: straight-shoota/sass.cr
   sqlite3:
     github: crystal-lang/crystal-sqlite3
+  jwt:
+    github: crystal-community/jwt
 
 license: MIT

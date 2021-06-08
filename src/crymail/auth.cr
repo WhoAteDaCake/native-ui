@@ -3,6 +3,7 @@ require "json"
 require "http/server"
 require "uri"
 require "http/client"
+require "jwt"
 
 require "./storage"
 
@@ -30,12 +31,22 @@ struct OauthResponse
   property token_type : String
 end
 
+struct GmailUser
+  property email : String
+  property id : String
+
+  def initialize(@email, @id)
+  end
+end
+
 class Token
   include JSON::Serializable
   
   property internal : OauthResponse
   property expires_on : Time
   property refresh_token : String
+
+  delegate id_token, to: @internal
 
   def initialize(@internal, @refresh_token)
     @expires_on = Time.utc + Time::Span.new(seconds: @internal.expires_in)
@@ -49,6 +60,8 @@ class Token
     "#{@internal.token_type} #{@internal.access_token}"
   end
 end
+
+
 
 class Auth
   enum TokenRequest
@@ -146,7 +159,7 @@ class Auth
 
   def refresh_token()
     token = @token
-    if !token.nil?
+    if token
       if token.expires_on < Time.utc
         Logger.info { "Token has expired, refreshing" }
         auth, _ = token_request(TokenRequest::Refresh, token.refresh_token)
@@ -155,6 +168,22 @@ class Auth
       else
         Logger.info { "Token valid till #{token.expires_on.to_local}, continue" }
       end
+    end
+  end
+
+  def get_user()
+    token = get_token()
+    payload, header = JWT.decode(token.id_token, verify: false, validate: false)
+    GmailUser.new(payload["email"].as_s, payload["sub"].as_s)
+  end
+
+  def get_token() : Token
+    refresh_token
+    token = @token
+    if token
+      token
+    else
+      raise "Tried to get token when non existent"
     end
   end
 
