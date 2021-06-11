@@ -17,8 +17,8 @@ require "./pages/*"
 # - ParseResource -> Parses HTML code [builder.c] (95)
 # - LCUIWidget_New -> Create widget [widget_base.c] (174)
 
-Log.setup(:debug, backend: Log::IOBackend.new(dispatcher: Log::DispatchMode::Direct))
-Logger = Log.for("crymail", :debug)
+Log.setup(:info, backend: Log::IOBackend.new(dispatcher: Log::DispatchMode::Direct))
+Logger = Log.for("crymail", :info)
 Logger.info { "Running at version: [#{Crymail::VERSION}]"}
 
 storage = Storage.new("./data")
