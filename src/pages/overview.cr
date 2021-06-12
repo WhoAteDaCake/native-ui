@@ -8,7 +8,6 @@ class OverviewPage
   
   def initialize()
     @container = Widget.new
-    @container.add_class("fc")
     @content = nil
   end
 

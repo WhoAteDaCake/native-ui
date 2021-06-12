@@ -3,13 +3,10 @@ Lcui.register_sass("
   .overview_page_content {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
     &__mail_container {
-      display: flex;
-      flex-direction: column;
+      min-height: 100%;
       width: 100%;
-      height: 100%;
+      flex: 1 1 auto;
     }
   }
 ")
@@ -33,9 +30,8 @@ class OverviewPageContent
     @mail_container.add_class("overview_page_content__mail_container")
 
     @scrollbar = ScrollBar.new
-    # @scrollbar.bind_scroll(@mail_container)
-    @container.append_child(@mail_container)
-    # @container.append_child(@scrollbar)
+    @scrollbar.bind_scroll(@mail_container)
+    @container.append_child(@mail_container, @scrollbar)
     
     @mail = Mail.new(auth)
     list = @mail.load_email_meta

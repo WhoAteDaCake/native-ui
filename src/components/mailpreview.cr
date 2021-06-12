@@ -3,7 +3,6 @@ Lcui.register_sass("
     background-color: #F2E9E4;
     padding: 2px 2px 2px 2px;
     border: 1px solid #000;
-    height: 40px;
   }
 ")
 
