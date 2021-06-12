@@ -1,3 +1,4 @@
+# LINKS
 @[Link(ldflags: "`pkg-config --cflags --libs x11 xcb libpng fontconfig`")]
 # Rest
 @[Link(ldflags: "-L#{__DIR__}/../LCUI/src/.libs")]
@@ -270,7 +271,7 @@ enum LcuiStyleType
     SvRow = 44
     SvColumn = 45
   end
-  alias WcharT = UInt16
+  alias WcharT = LibC::Int
   struct LcuiFlexLayoutStyle
         # The flex shrink factor of a flex item See more: https://developer.mozilla.org/en-US/docs/Web/CSS/flex-shrink
 shrink : LibC::Float
@@ -1674,7 +1675,17 @@ fun text_edit_set_place_holder_w = TextEdit_SetPlaceHolderW(w : LcuiWidget, wstr
     # 设置密码屏蔽符
 fun text_edit_set_password_char = TextEdit_SetPasswordChar(w : LcuiWidget, ch : WcharT)
   fun lcui_widget_add_text_edit = LCUIWidget_AddTextEdit
-  # $LCUI_WStringObject : LcuiObjectTypeRec*
-  # $LCUI_StringObject : LcuiObjectTypeRec*
-  # $LCUI_NumberObject : LcuiObjectTypeRec*
+  fun scroll_bar_bind_box = ScrollBar_BindBox(w : LcuiWidget, box : LcuiWidget)
+  fun scroll_bar_bind_target = ScrollBar_BindTarget(w : LcuiWidget, layer : LcuiWidget)
+    # 获取滚动条的位置
+fun scroll_bar_get_position = ScrollBar_GetPosition(w : LcuiWidget) : LibC::Int
+    # 将与滚动条绑定的内容滚动至指定位置
+fun scroll_bar_set_position = ScrollBar_SetPosition(w : LcuiWidget, pos : LibC::Int) : LibC::Int
+    # 设置滚动条的方向
+fun scroll_bar_set_direction = ScrollBar_SetDirection(w : LcuiWidget, direction : LcuiScrollBarDirection)
+  enum LcuiScrollBarDirection
+    LcuiScrollbarHorizontal = 0
+    LcuiScrollbarVertical = 1
+  end
+  fun lcui_widget_add_t_scroll_bar = LCUIWidget_AddTScrollBar
 end

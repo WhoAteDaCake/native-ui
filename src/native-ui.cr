@@ -9,6 +9,7 @@ require "./lcui"
 require "./crymail/*"
 require "./pages/*"
 
+
 # Notes
 # - LCUIWidget_NewPrototype -> Creates new widget [widget_prototype.c] (125)
 # - LCUI_WidgetPrototypeRec_ -> [widget_base.h] (150)
@@ -30,7 +31,13 @@ Lcui.register_css("
     height: 100%;
     width: 100%;
   }
+  .fc {
+    width: 100%;
+    height: 100%;
+  }
 ")
+
+
 
 
 Lcui.run do

@@ -117,7 +117,7 @@ class Mail
 
   def load_email_meta()
     @auth.refresh_token
-    response = request("messages", {"maxResults" => "10" })
+    response = request("messages", {"maxResults" => "15" })
     cursor = MessagesList.from_json(response.body)
     cursor.messages.map do |m|
       resp = request("messages/#{m.id}", { "format" => "metadata" } )

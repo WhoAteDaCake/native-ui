@@ -77,8 +77,8 @@ class Widget
     LibLCUI.widget_unlink(widget.internal)
   end
 
-  def add_class(cname : String)
-    LibLCUI.widget_add_class(@internal, cname)
+  def add_class(*cnames : String)
+    cnames.each { |c|  LibLCUI.widget_add_class(@internal, c)}
   end
 
   def remove_class(cname : String)
