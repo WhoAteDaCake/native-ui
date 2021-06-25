@@ -3,4 +3,4 @@
 fwatcher --delay=1.0 -a \
   --dir ./bin \
   --dir ./assets \
-  --on-start execute ./bin/native-ui
+  --on-start execute ./bin/${1:-native-ui}
