@@ -37,9 +37,6 @@ Lcui.register_css("
   }
 ")
 
-
-
-
 Lcui.run do
   root = Widget.root()
   root.add_class("root")
@@ -57,7 +54,6 @@ Lcui.run do
     height = LibLCUI.lcui_display_get_height
     pos.update_size(width, height)
   })
-
 
   overview_page = OverviewPage.new
   login_page = LoginPage.new

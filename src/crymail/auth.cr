@@ -93,6 +93,7 @@ class Auth
     url = "#{TOKEN_ENDPOINT}?#{params.to_s}"
 
     response = HTTP::Client.post url
+    puts response.body
     data = OauthResponse.from_json(response.body)
     refresh_token = nil
     if request == TokenRequest::Authorise

@@ -1,12 +1,12 @@
 
 Lcui.register_sass("
   .overview_page_content {
-    display: flex;
-    flex-direction: column;
+    height: 300px;
+    background-color: rgba(1.0, 0, 0, 0.9);
+
     &__mail_container {
-      min-height: 100%;
+      display: inline-block;
       width: 100%;
-      flex: 1 1 auto;
     }
   }
 ")
@@ -29,16 +29,16 @@ class OverviewPageContent
     @mail_container = Widget.new
     @mail_container.add_class("overview_page_content__mail_container")
 
-    @scrollbar = ScrollBar.new
-    @scrollbar.bind_scroll(@mail_container)
-    @container.append_child(@mail_container, @scrollbar)
-    
     @mail = Mail.new(auth)
     list = @mail.load_email_meta
     @messages = list.map { |d| MailPreview.new(d) }
     @messages.each do |m|
       m.mount_on(@mail_container)
     end
+
+    @scrollbar = ScrollBar.new
+    @scrollbar.bind_scroll(@mail_container)
+    @container.append_child(@mail_container, @scrollbar)
   end
 
   def mount_on(parent)
