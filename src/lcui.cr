@@ -61,12 +61,18 @@ module Lcui
   end
 
   def self.load_css()
-    @@css.each do |css|
-      status = LibLCUI.lcui_load_css_string(css, __DIR__)
-      if status != 0
-        raise "Failed to load CSS: #{status}"
-      end
-    end
+    full_css = @@css.join("\n")
     @@css.clear
+    status = LibLCUI.lcui_load_css_string(full_css, nil)
+    if status != 0
+      raise "Failed to load CSS: #{status}"
+    end
+  end
+
+  def self.load_css(css)
+    status = LibLCUI.lcui_load_css_string(css, nil)
+    if status != 0
+      raise "Failed to load CSS: #{status}"
+    end
   end
 end
