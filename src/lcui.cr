@@ -18,7 +18,7 @@ require "./LibLCUI.cr"
 
 module Lcui
   @@css : Array(String) = Array(String).new
-  alias EventCallback = (LibLCUI::LcuiWidgetRec, LibLCUI::LcuiWidgetEventRec) ->
+  alias EventCallback = (LibLCUI::LcuiWidget, LibLCUI::LcuiWidgetEvent) ->
   alias UcharT = LibLCUI::UcharT
   alias Color = LibLCUI::LcuiArgb8888
   alias WindowPos = LibLCUI::LcuiRect2F
@@ -75,4 +75,8 @@ module Lcui
       raise "Failed to load CSS: #{status}"
     end
   end
-end
+
+  def self.to_bool(value : UInt8)
+    value != 0
+  end
+end 

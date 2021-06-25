@@ -9,8 +9,10 @@ Lcui.register_sass("
 class MailPreview
   @container : Widget
   @text: TextView
+  @id : String
 
-  def initialize(data : Mail::MessageMeta)
+  def initialize(data : Mail::MessageMeta, @id : String)
+    # puts data
     from = data.payload.headers.find { |h| h.name == "From"}
     if from.nil?
       raise "Email with no FROM field found, unexpected"
@@ -23,6 +25,9 @@ class MailPreview
     full_text = "#{name}  #{data.snippet[0,50]}"
     @text.set_text(full_text)
     @container.append_child(@text)
+
+    # @container.set_attr("list_id", @id)
+    @text.set_attr("list_id", @id)
   end
 
   def mount_on(parent)

@@ -2,7 +2,7 @@ class Context(T)
   alias Id = Int64
 
   @id : Id = 0
-  @state : String
+  @state : T
   @subscribers : Hash(Int64, (T -> Void))
   
   def initialize(@state : T)
@@ -23,6 +23,10 @@ class Context(T)
     id = get_id
     @subscribers[id] = cb
     id
+  end
+
+  def listen(&cb : T -> Void)
+    listen(cb)
   end
 
   def unlisten(id : Id)

@@ -1,5 +1,10 @@
-require "./context"
 
+module Router
+  enum Action
+    Push
+    Replace
+  end
+  alias RouterContext = Context({Action, String})
+end
 
-alias RouterContext = Context(String)
-GLOBAL_ROUTER = RouterContext.new "/"
+GLOBAL_ROUTER = Router::RouterContext.new ({Router::Action::Push, "/"})

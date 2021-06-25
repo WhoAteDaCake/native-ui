@@ -59,6 +59,7 @@ class Mail
     include WithHistory
     include WithDate
     include WithSize
+    include MessageBareContent
 
     @[JSON::Field(key: "labelIds")]
     property label_ids : Array(String)

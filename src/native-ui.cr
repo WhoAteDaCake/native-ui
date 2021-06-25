@@ -48,35 +48,47 @@ Lcui.run do
   pos = window.position
   window.sync_widget(pos)
 
-  root.bind_event("destroy", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
+  root.bind_event("destroy") do |w,e|
     window.update_position pos
-  })
+  end
 
-  root.bind_event("resize", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
+  root.bind_event("resize") do |w,e|
     width = LibLCUI.lcui_display_get_width
     height = LibLCUI.lcui_display_get_height
     pos.update_size(width, height)
-  })
+  end
 
   overview_page = OverviewPage.new
   login_page = LoginPage.new
 
   ctx = GLOBAL_ROUTER
-  router = Router.new(ctx)
-  router.routes["/"] = login_page.container
-  router.routes["/emails"] = overview_page.container
+  router = Router::State.new(root)
+  router.add "/", login_page
+  router.add "/emails", overview_page
+
+  ctx.listen do |action|
+    action, route = action
+    case action
+      in Router::Action::Push
+        router.push(route)
+      in .replace?
+        router.replace(route) 
+    end
+  end
+  
+  router.change_page("/", login_page, Hash(String, String).new)
 
   if ! auth.not_loaded
     overview_page.introduce_auth(auth)
-    ctx.update "/emails"
+    ctx.update ({Router::Action::Replace, "/emails"})
   end
 
   # TODO: should unbind 
-  login_page.button.bind_event("click", ->(w : LibLCUI::LcuiWidgetRec, e : LibLCUI::LcuiWidgetEventRec) {
+  login_page.button.bind_event("click") do |w,e|
     auth.login
     overview_page.introduce_auth(auth)
-    ctx.update "/emails"
-  })
+    ctx.update ({Router::Action::Replace, "/emails"})
+  end
 
-  router.mount_on(root)
+  # router.mount_on(root)
 end

@@ -54,9 +54,13 @@ class Widget
     boxed_data = Box.box(callback)
     event_id = LibLCUI.widget_bind_event(internal, event, ->(me, event, _data) {
       data_as_callback = Box(typeof(callback)).unbox(event.value.data)
-      data_as_callback.call(me.value, event.value)
+      data_as_callback.call(me, event)
     }, boxed_data, nil)
     @box[event_id] = boxed_data
+  end
+
+  def bind_event(event : String, &callback : Lcui::EventCallback)
+    bind_event(event, callback)
   end
 
   def unbind_event(event_id : LibC::Int)
@@ -81,6 +85,11 @@ class Widget
     cnames.each { |c|  LibLCUI.widget_add_class(@internal, c)}
   end
 
+  def has_class(cname : String)
+    result = LibLCUI.widget_has_class(@internal, cname)
+    Lcui.to_bool result
+  end
+
   def remove_class(cname : String)
     LibLCUI.remove_class(@internal, cname)
   end
@@ -91,5 +100,18 @@ class Widget
 
   def move(x : LibC::Float, y : LibC::Float)
     LibLCUI.widget_resize(@internal, x, y)
+  end
+
+  def set_attr(name : String, value : String)
+    LibLCUI.widget_set_attribute(@internal, name, value)
+  end
+
+  def get_attr(name : String)
+    attr = LibLCUI.widget_get_attribute(@internal, name)
+    if attr.null?
+      nil
+    else
+      String.new(attr)
+    end
   end
 end

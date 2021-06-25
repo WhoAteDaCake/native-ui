@@ -30,7 +30,7 @@ class OverviewPageContent
 
     @mail = Mail.new(auth)
     list = @mail.load_email_meta
-    @messages = list.map { |d| MailPreview.new(d) }
+    @messages = list.map_with_index { |d, i| MailPreview.new(d, i.to_s) }
     @messages.each do |m|
       m.mount_on(@mail_container)
     end
@@ -38,6 +38,18 @@ class OverviewPageContent
     @scrollbar = ScrollBar.new
     @scrollbar.bind_scroll(@mail_container)
     @container.append_child(@mail_container, @scrollbar)
+
+    @mail_container.bind_event("click") do |w,e|
+      w = Widget.new e.value.target
+      attr = w.get_attr("list_id")
+      if attr
+        id = attr.to_i
+        if id < @messages.size
+          selected = @messages[id]
+          # puts
+        end
+      end
+    end
   end
 
   def mount_on(parent)
