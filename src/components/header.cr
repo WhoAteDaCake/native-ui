@@ -2,16 +2,16 @@ require "../lcui"
 require "./entry"
 
 Lcui.register_sass("
-  .container {
-    display: flex;
-    flex-direction: column;
-    margin: 10px auto 10px auto;
-    width: 250px;
-  }
-
   .header {
     height: 32px;
     display: flex;
+
+    &__container {
+      display: flex;
+      margin: 10px auto 10px auto;
+      flex-direction: column;
+      width: 250px;
+    }
 
     &__button {
       margin-left: 10px;
@@ -53,7 +53,7 @@ class Header
 
     @container = Widget.new
     @container.append_child(@header, @content)
-    @container.add_class("container")
+    @container.add_class("header__container")
   end
 
   def on_remove(id : Int64)
