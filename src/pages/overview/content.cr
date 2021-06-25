@@ -1,7 +1,6 @@
 
 Lcui.register_sass("
   .overview_page_content {
-    height: 300px;
     background-color: rgba(1.0, 0, 0, 0.9);
 
     &__mail_container {
@@ -24,7 +23,7 @@ class OverviewPageContent
   #   - scrollbar
   def initialize(auth)
     @container = Widget.new
-    @container.add_class("overview_page_content")
+    @container.add_class("overview_page_content", "f-h")
 
     @mail_container = Widget.new
     @mail_container.add_class("overview_page_content__mail_container")

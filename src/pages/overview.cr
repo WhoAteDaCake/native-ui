@@ -8,6 +8,7 @@ class OverviewPage
   
   def initialize()
     @container = Widget.new
+    @container.add_class("full-size")
     @content = nil
   end
 

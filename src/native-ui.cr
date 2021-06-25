@@ -31,15 +31,18 @@ Lcui.register_css("
     height: 100%;
     width: 100%;
   }
-  .fc {
+  .full-size {
     width: 100%;
+    height: 100%;
+  }
+  .f-h {
     height: 100%;
   }
 ")
 
 Lcui.run do
   root = Widget.root()
-  root.add_class("root")
+  root.add_class("full-size")
 
   window = Window.new(storage, root)
   pos = window.position
