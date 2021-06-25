@@ -1,5 +1,7 @@
 {
   "files.associations": {
-    "textview.h": "c"
+    "textview.h": "c",
+    "linkedlist.h": "c",
+    "widget_util.h": "c"
   }
 }

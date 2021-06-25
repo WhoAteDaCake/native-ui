@@ -13,6 +13,8 @@ scripts:
 targets:
   native-ui:
     main: ./src/native-ui.cr
+  temp-test:
+    main: ./src/temp-test.cr
 
 dependencies:
   sass:

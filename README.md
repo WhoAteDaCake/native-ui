@@ -8,6 +8,9 @@ These are all points I should adress after initial prototyping is done
 * Easier write to write components. A react-like interface would be great:
   * `Widget.new(children=[Button.new(text="hello")], class_name=["hello", "test"])`
 
+## TODO:
+
+Retrieve emails to 
 
 TODO: Write a description here
 
