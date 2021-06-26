@@ -5,7 +5,6 @@ require "../lcui"
 
 class OverviewPage
   include Page
-  property container : Widget
   property url = "/overview"
   property content : OverviewPageContent | Nil 
 

@@ -36,7 +36,6 @@ end
 
 class MailPage
   include Page
-  property container : Widget
   property url = "/mail/:id"
   #
   property auth : Auth

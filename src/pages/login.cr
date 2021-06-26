@@ -11,7 +11,6 @@ Lcui.register_sass("
 
 class LoginPage
   include Page
-  property container : Widget
   property url = "/"
   property button : Widget
   
