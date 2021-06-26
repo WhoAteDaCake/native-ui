@@ -17,12 +17,7 @@ class OverviewPageContent
   @messages : Array(MailPreview)
   @mail_container : Widget
 
-  # - container
-  #   - mail_container
-  #     - messages
-  #   - scrollbar
-  def initialize(auth)
-    @container = Widget.new
+  def initialize(auth, @container)
     @container.add_class("overview_page_content", "f-h")
 
     @mail_container = Widget.new
@@ -43,11 +38,7 @@ class OverviewPageContent
       w = Widget.new e.value.target
       attr = w.get_attr("message_id")
       if attr
-        id = attr.to_i
-        if id < @messages.size
-          selected = @messages[id]
-          # puts
-        end
+        puts attr
       end
     end
   end
