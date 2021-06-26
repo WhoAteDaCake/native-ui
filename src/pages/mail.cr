@@ -4,9 +4,11 @@ class MailPage
   include Page
   property container : Widget
   property url = "/mail/:id"
+  property auth : Auth
 
-  def initialize()
+  def initialize(@auth)
     @container = Widget.new
+    @container.add_class("full-size")
   end
 
   def on_mount(params)

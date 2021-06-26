@@ -36,9 +36,9 @@ class OverviewPageContent
 
     @mail_container.bind_event("click") do |w,e|
       w = Widget.new e.value.target
-      attr = w.get_attr("message_id")
-      if attr
-        puts attr
+      id = w.get_attr("message_id")
+      if id
+        Router.push("/mail/#{id}")
       end
     end
   end

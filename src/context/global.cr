@@ -5,6 +5,7 @@ module Router
   enum Action
     Push
     Replace
+    Pop
   end
   alias RouterContext = Context({Action, String})
 
@@ -14,6 +15,10 @@ module Router
 
   def self.replace(route)
     @@ctx.update({Router::Action::Replace, route})
+  end
+
+  def self.pop()
+    @@ctx.update({Router::Action::Pop, ""})
   end
 
   def self.listen(&action : {Action, String} ->)

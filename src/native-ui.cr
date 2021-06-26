@@ -65,17 +65,18 @@ Lcui.run do
   router = Router::State.new(root, login)
   router.add login
   router.add overview
-  router.add MailPage.new
+  router.add MailPage.new(auth)
 
 
   Router.listen do |action|
     action, route = action
-    puts "#{action}, #{route}"
     case action
       in Router::Action::Push
         router.push(route)
       in .replace?
         router.replace(route) 
+      in .pop?
+        router.pop
       end
   end
 
@@ -90,6 +91,5 @@ Lcui.run do
     overview.introduce_auth(auth)
     Router.replace("/overview")
   end
-
   # router.mount_on(root)
 end

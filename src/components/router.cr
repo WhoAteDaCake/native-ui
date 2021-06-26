@@ -12,10 +12,13 @@ module Router
       @history = Array(String).new
     end
 
-    def initialize(root : Widget, default_page : Page)
-      initialize(root)
+    def initialize(@root : Widget, default_page : Page)
+      @tree = Radix::Tree(Page).new
+      @history = Array(String).new
+      
       @active = default_page
-      root.append_child(default_page.container)
+      @history << default_page.url
+      @root.append_child(default_page.container)
     end
   
     def change_page(route : String, page : Page, params : Hash(String, String))
@@ -36,14 +39,21 @@ module Router
       end
     end
 
-    def replace(route : String)
+    def replace(route : String, swap_history = true)
       result = tree.find route
       if result.found?
         change_page(route, result.payload, result.params)
         # Should never really happen, let's just validate to be safe
-        if @history.size > 0
+        if swap_history && @history.size > 0
           @history[@history.size - 1] = route
         end
+      end
+    end
+
+    def pop()
+      if @history.size > 0
+        @history.pop
+        replace(@history.last, false)
       end
     end
 
