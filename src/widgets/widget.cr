@@ -22,7 +22,7 @@ class Widget
     classes : Array(String) | Nil = nil,
     children : Array(Widget) | Nil = nil,
     indirect : Bool = false,
-    events : Hash(String, Lcui::EventCallback | Callback) | Nil = nil,
+    events : Hash(String, Lcui::EventCallback | EventCallback) | Nil = nil,
   )
     @internal = internal
     @box = EventHash.new
@@ -38,13 +38,7 @@ class Widget
       classes.each { |c| add_class c }
     end
     if events
-      events.each do |k, v|
-        if v.is_a?(Callback)
-          bind_event(k, v.cb)
-        else
-          bind_event(k, v)
-        end
-      end
+      events.each { |k,v| bind_event(k, v) }
     end 
   end
 

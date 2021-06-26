@@ -22,7 +22,7 @@ class MailPageContent
           TextView.make(
             "Go back",
             events: {
-              "click" => Callback.new do |w, e|
+              "click" => EventCallback.new do |w, e|
                 Router.pop
               end
             }
