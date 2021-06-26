@@ -58,15 +58,19 @@ Lcui.run do
     pos.update_size(width, height)
   end
 
-  overview_page = OverviewPage.new
-  login_page = LoginPage.new
+  # Pages
+  overview = OverviewPage.new
+  login = LoginPage.new
 
-  router = Router::State.new(root)
-  router.add "/", login_page
-  router.add "/emails", overview_page
+  router = Router::State.new(root, login)
+  router.add login
+  router.add overview
+  router.add MailPage.new
+
 
   Router.listen do |action|
     action, route = action
+    puts "#{action}, #{route}"
     case action
       in Router::Action::Push
         router.push(route)
@@ -74,20 +78,17 @@ Lcui.run do
         router.replace(route) 
       end
   end
-  
-  # Default page
-  router.change_page("/", login_page, Hash(String, String).new)
 
-  if ! auth.not_loaded
-    overview_page.introduce_auth(auth)
-    Router.replace("/emails")
+  if auth.loaded
+    overview.introduce_auth(auth)
+    Router.replace("/overview")
   end
 
   # TODO: should unbind 
-  login_page.button.bind_event("click") do |w,e|
+  login.button.bind_event("click") do |w,e|
     auth.login
-    overview_page.introduce_auth(auth)
-    Router.replace("/emails")
+    overview.introduce_auth(auth)
+    Router.replace("/overview")
   end
 
   # router.mount_on(root)
