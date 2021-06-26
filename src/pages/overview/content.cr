@@ -20,7 +20,7 @@ class OverviewPageContent
   def initialize(auth, @container)
     @container.add_class("overview_page_content", "f-h")
 
-    @mail_container = Widget.new
+    @mail_container = Widget.make
     @mail_container.add_class("overview_page_content__mail_container")
 
     @mail = Mail.new(auth)
@@ -35,7 +35,7 @@ class OverviewPageContent
     @container.append_child(@mail_container, @scrollbar)
 
     @mail_container.bind_event("click") do |w,e|
-      w = Widget.new e.value.target
+      w = Widget.new(e.value.target, indirect: true)
       id = w.get_attr("message_id")
       if id
         Router.push("/mail/#{id}")

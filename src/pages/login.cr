@@ -16,7 +16,7 @@ class LoginPage
   property button : Widget
   
   def initialize()
-    @container = Widget.new
+    @container = Widget.make
     @container.add_class("login_page")
 
     @button = Button.new("Login with Gmail")

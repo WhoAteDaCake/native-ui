@@ -35,7 +35,7 @@ class Header
   @idx : Int16 = 0
 
   def initialize()
-    @header = Widget.new
+    @header = Widget.make
     @header.add_class("header")
 
     @input = TextEdit.new
@@ -47,11 +47,11 @@ class Header
     end
     @header.append_child(@input, @button)
 
-    @content = Widget.new
+    @content = Widget.make
     @content.add_class("content")
     @items = Array(Entry).new
 
-    @container = Widget.new
+    @container = Widget.make
     @container.append_child(@header, @content)
     @container.add_class("header__container")
   end

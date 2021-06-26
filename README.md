@@ -6,7 +6,7 @@ These are all points I should adress after initial prototyping is done
 * Need a way of cathiching resize events, so I can be notified on how much text to show
 * There needs to be a better way to write css (variables, verification, potentially style reloading?)
 * Easier write to write components. A react-like interface would be great:
-  * `Widget.new(children=[Button.new(text="hello")], class_name=["hello", "test"])`
+  * `Widget.make(children=[Button.new(text="hello")], class_name=["hello", "test"])`
 
 ## TODO:
 

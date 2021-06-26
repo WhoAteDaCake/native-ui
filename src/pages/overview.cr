@@ -11,7 +11,7 @@ class OverviewPage
 
   
   def initialize()
-    @container = Widget.new
+    @container = Widget.make
     @content = nil
   end
 

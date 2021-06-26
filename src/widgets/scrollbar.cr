@@ -1,6 +1,6 @@
 class ScrollBar < Widget
   def initialize()
-    super("scrollbar")
+    super(LibLCUI.lcui_widget_new("scrollbar"))
   end
 
   def bind_scroll(widget : Widget)

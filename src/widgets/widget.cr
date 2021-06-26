@@ -10,29 +10,50 @@ class Widget
   @box: EventHash
   @children : Array(Widget)
   @cleared : Bool = false
+  # if we passed already used pointer to get api access
+  @indirect : Bool = false
   
   def self.root()
     Widget.new(LibLCUI.lcui_widget_get_root())
   end
 
-  def initialize(internal : LibLCUI::LcuiWidget)
+  def initialize(
+    internal : LibLCUI::LcuiWidget,
+    classes : Array(String) | Nil = nil,
+    children : Array(Widget) | Nil = nil,
+    indirect : Bool = false
+  )
     @internal = internal
     @box = EventHash.new
     @children = Array(Widget).new
     @id = @@id
     @@id += 1
+    # Set properties
+    @indirect = indirect
+    if children
+      children.each { |c| append_child c }
+    end
+    if classes
+      classes.each { |c| add_class c }
+    end
   end
 
-  def initialize(proto_name : String)
-    initialize(LibLCUI.lcui_widget_new(proto_name))
+  def self.make_proto(proto_name : String, **opts)
+    Widget.new(LibLCUI.lcui_widget_new(proto_name), **opts)
   end
 
-  def initialize()
-    initialize("widget")
+  def self.make(**opts)
+    Widget.make_proto("widget", **opts)
+  end
+
+  def ptr()
+    @internal
   end
 
   def finalize
-    destroy
+    if ! @indirect
+      destroy
+    end
   end
 
   def destroy
@@ -78,6 +99,10 @@ class Widget
       child.hash != widget.hash
     end
     LibLCUI.widget_unlink(widget.internal)
+  end
+
+  def remove_children()
+    LibLCUI.widget_destroy_children(@internal)
   end
 
   def add_class(*cnames : String)

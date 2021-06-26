@@ -4,9 +4,8 @@ require "./widget"
 require "./textview"
 
 class Button < TextView
-  def initialize(text : String)
-    super("button")
-    set_text(text)
+  def initialize(text : String, **opts)
+    super("button", text, **opts)
   end
  
   def on_click(&callback : Lcui::EventCallback)

@@ -17,14 +17,14 @@ class Entry
   @button : Button
 
   def initialize(text_raw : String)
-    text = TextView.new
+    text = TextView.make
     text.set_text(text_raw)
     text.set_color(TEXT_COLOR)
     
     button = Button.new("X")
     @button = button
 
-    @container = Widget.new
+    @container = Widget.make
     @container.add_class("entry_container")
     @container.append_child(text, button)
   end

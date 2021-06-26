@@ -16,12 +16,11 @@ class MailPreview
       raise "Email with no FROM field found, unexpected"
     end
     name = from.value.split("<")[0]
-    @container = Widget.new
+    @container = Widget.make
     @container.add_class("mail_preview")
-    @text = TextView.new
     # TODO: base on width of the screen ?
     full_text = "#{name}  #{data.snippet[0,50]}"
-    @text.set_text(full_text)
+    @text = TextView.make(full_text)
     @container.append_child(@text)
 
     # @container.set_attr("list_id", @id)
