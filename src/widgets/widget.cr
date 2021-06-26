@@ -32,7 +32,6 @@ class Widget
   end
 
   def finalize
-    puts "Finalize"
     destroy
   end
 

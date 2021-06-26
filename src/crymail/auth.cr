@@ -93,7 +93,6 @@ class Auth
     url = "#{TOKEN_ENDPOINT}?#{params.to_s}"
 
     response = HTTP::Client.post url
-    puts response.body
     data = OauthResponse.from_json(response.body)
     refresh_token = nil
     if request == TokenRequest::Authorise
@@ -191,12 +190,12 @@ class Auth
     @token = from_storage()
   end
 
-  def not_loaded()
-    @token.nil?
+  def loaded()
+    ! @token.nil?
   end
 
   def login()
-    if not_loaded
+    if @token.nil?
       Logger.info { "Token not found requesting auth" }
       # TODO: support different browsers ?
       Process.new("xdg-open", [REQUEST_URL])

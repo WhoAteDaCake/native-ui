@@ -11,7 +11,6 @@ class MailPreview
   @text: TextView
 
   def initialize(data : Mail::MessageMeta)
-    # puts data
     from = data.payload.headers.find { |h| h.name == "From"}
     if from.nil?
       raise "Email with no FROM field found, unexpected"
