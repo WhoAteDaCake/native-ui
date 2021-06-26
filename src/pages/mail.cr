@@ -1,4 +1,5 @@
 require "./page"
+require "../core/*"
 
 Lcui.register_sass("
   .mail_page_content {
@@ -21,9 +22,9 @@ class MailPageContent
           TextView.make(
             "Go back",
             events: {
-              "click" => ->(w : Lcui::Widget, e : Lcui::Event) {
+              "click" => Callback.new do |w, e|
                 Router.pop
-              }
+              end
             }
           ),
         ]
