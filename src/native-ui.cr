@@ -61,33 +61,33 @@ Lcui.run do
   overview_page = OverviewPage.new
   login_page = LoginPage.new
 
-  ctx = GLOBAL_ROUTER
   router = Router::State.new(root)
   router.add "/", login_page
   router.add "/emails", overview_page
 
-  ctx.listen do |action|
+  Router.listen do |action|
     action, route = action
     case action
       in Router::Action::Push
         router.push(route)
       in .replace?
         router.replace(route) 
-    end
+      end
   end
   
+  # Default page
   router.change_page("/", login_page, Hash(String, String).new)
 
   if ! auth.not_loaded
     overview_page.introduce_auth(auth)
-    ctx.update ({Router::Action::Replace, "/emails"})
+    Router.replace("/emails")
   end
 
   # TODO: should unbind 
   login_page.button.bind_event("click") do |w,e|
     auth.login
     overview_page.introduce_auth(auth)
-    ctx.update ({Router::Action::Replace, "/emails"})
+    Router.replace("/emails")
   end
 
   # router.mount_on(root)

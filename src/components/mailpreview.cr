@@ -9,9 +9,8 @@ Lcui.register_sass("
 class MailPreview
   @container : Widget
   @text: TextView
-  @id : String
 
-  def initialize(data : Mail::MessageMeta, @id : String)
+  def initialize(data : Mail::MessageMeta)
     # puts data
     from = data.payload.headers.find { |h| h.name == "From"}
     if from.nil?
@@ -27,7 +26,7 @@ class MailPreview
     @container.append_child(@text)
 
     # @container.set_attr("list_id", @id)
-    @text.set_attr("list_id", @id)
+    @text.set_attr("message_id", data.id)
   end
 
   def mount_on(parent)

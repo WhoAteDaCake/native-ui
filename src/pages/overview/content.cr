@@ -30,7 +30,7 @@ class OverviewPageContent
 
     @mail = Mail.new(auth)
     list = @mail.load_email_meta
-    @messages = list.map_with_index { |d, i| MailPreview.new(d, i.to_s) }
+    @messages = list.map { |d| MailPreview.new(d) }
     @messages.each do |m|
       m.mount_on(@mail_container)
     end
@@ -41,7 +41,7 @@ class OverviewPageContent
 
     @mail_container.bind_event("click") do |w,e|
       w = Widget.new e.value.target
-      attr = w.get_attr("list_id")
+      attr = w.get_attr("message_id")
       if attr
         id = attr.to_i
         if id < @messages.size
