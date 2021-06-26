@@ -57,8 +57,8 @@ module Router
       end
     end
 
-    def add(page : Page)
-      @tree.add(page.url, page)
+    def add(*pages : Page)
+      pages.each { |p| @tree.add(p.url, p) }
     end
 
   end

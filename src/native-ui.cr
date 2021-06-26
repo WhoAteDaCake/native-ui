@@ -63,10 +63,7 @@ Lcui.run do
   login = LoginPage.new
 
   router = Router::State.new(root, login)
-  router.add login
-  router.add overview
-  router.add MailPage.new(auth)
-
+  router.add(login, overview, MailPage.new(auth))
 
   Router.listen do |action|
     action, route = action
