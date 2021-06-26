@@ -14,14 +14,22 @@ Lcui.register_sass("
 
 class MailPageContent
   def initialize(@container : Widget, @auth : Auth, @id : String)
-    header = Widget.make
-    header.add_class("mail_page_content__header")
-    # TODO: create anchor tag
-    link_back = TextView.make(text: "Go back")
-    header.append_child(link_back)
-
-    text = TextView.make(text: @id)
-    @container.append_child(header, text)
+    @container.append_child(
+      Widget.make(
+        classes: ["mail_page_content__header"],
+        children: [
+          TextView.make(
+            "Go back",
+            events: {
+              "click" => ->(w : Lcui::Widget, e : Lcui::Event) {
+                Router.pop
+              }
+            }
+          ),
+        ]
+      ),
+      TextView.make(@id)
+    )
   end
 end
 
@@ -44,8 +52,5 @@ class MailPage
       container.remove_children
     end 
     @content = MailPageContent.new(@container, @auth, params["id"])
-    # text = TextView.make
-    # text.set_text(params["id"])
-    # @container.append_child(text)
   end
 end

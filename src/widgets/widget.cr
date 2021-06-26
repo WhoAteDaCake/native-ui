@@ -21,7 +21,8 @@ class Widget
     internal : LibLCUI::LcuiWidget,
     classes : Array(String) | Nil = nil,
     children : Array(Widget) | Nil = nil,
-    indirect : Bool = false
+    indirect : Bool = false,
+    events : Hash(String, Lcui::EventCallback) | Nil = nil,
   )
     @internal = internal
     @box = EventHash.new
@@ -36,6 +37,9 @@ class Widget
     if classes
       classes.each { |c| add_class c }
     end
+    if events
+      events.each {|k, v| bind_event(k, v) }
+    end 
   end
 
   def self.make_proto(proto_name : String, **opts)
@@ -61,12 +65,6 @@ class Widget
     @cleared = true
     @children.clear
     @box.clear
-    # Performs the following actions
-    # - If: widget is not mounted to the tree: Widget_ExecDestroy
-    # - Update sibling indices attached to parent
-    # - If: position isn't absolute, Widget_AddTask(w->parent, LCUI_WTASK_REFLOW);
-    # - Widget_InvalidateArea
-    # - Widget_Destroy
     LibLCUI.widget_destroy(@internal)
   end
 

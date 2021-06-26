@@ -18,7 +18,10 @@ require "./LibLCUI.cr"
 
 module Lcui
   @@css : Array(String) = Array(String).new
-  alias EventCallback = (LibLCUI::LcuiWidget, LibLCUI::LcuiWidgetEvent) ->
+  alias Widget = LibLCUI::LcuiWidget
+  alias Event = LibLCUI::LcuiWidgetEvent
+  alias EventCallback = (Widget, Event) ->
+
   alias UcharT = LibLCUI::UcharT
   alias Color = LibLCUI::LcuiArgb8888
   alias WindowPos = LibLCUI::LcuiRect2F
