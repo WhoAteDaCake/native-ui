@@ -3,8 +3,8 @@ require "./widget"
 class TextEdit < Widget
   @buffer_size : Int16 = 512
 
-  def initialize() 
-    super("textedit")
+  def initialize(**opts) 
+    super(LibLCUI.lcui_widget_new("textedit"), **opts)
   end
 
   def value()
