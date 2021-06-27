@@ -62,8 +62,16 @@ Lcui.run do
   overview = OverviewPage.new
   login = LoginPage.new
 
-  router = Router::State.new(root, login)
+  # Router
+  sync = Router::Sync.new(storage)
+  sync.setup
+
+  router = Router::State.new(root, sync)
   router.add(login, overview, MailPage.new(auth))
+  loaded = router.load_from_db()
+  if !loaded
+    router.load_default(login)
+  end
 
   Router.listen do |action|
     action, route = action
@@ -79,14 +87,17 @@ Lcui.run do
 
   if auth.loaded
     overview.introduce_auth(auth)
-    Router.replace("/overview")
+    if !loaded
+      Router.replace("/overview")
+    end
   end
 
   # TODO: should unbind 
   login.button.bind_event("click") do |w,e|
     auth.login
     overview.introduce_auth(auth)
-    Router.replace("/overview")
+    if !loaded
+      Router.replace("/overview")
+    end
   end
-  # router.mount_on(root)
 end
