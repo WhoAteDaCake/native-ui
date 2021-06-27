@@ -1,5 +1,4 @@
 require "log"
-require "../crymail/storage"
 
 class Window
   Logger = Log.for("window", :debug)

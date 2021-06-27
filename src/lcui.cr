@@ -60,7 +60,9 @@ module Lcui
   end
 
   def self.register_sass(sass : String)
-    @@css << Sass.compile(sass)
+    css = Sass.compile(sass)
+    @@css << css
+    css
   end
 
   def self.load_css()

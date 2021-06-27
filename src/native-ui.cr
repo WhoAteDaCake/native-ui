@@ -6,7 +6,7 @@ require "./utils/*"
 require "./lcui"
 
 
-require "./crymail/*"
+require "./core/*"
 require "./pages/*"
 
 
@@ -61,13 +61,14 @@ Lcui.run do
   # Pages
   overview = OverviewPage.new
   login = LoginPage.new
+  mail = Mail.new(auth)
 
   # Router
   sync = Router::Sync.new(storage)
   sync.setup
 
   router = Router::State.new(root, sync)
-  router.add(login, overview, MailPage.new(auth))
+  router.add(login, overview, MailPage.new(mail))
   loaded = router.load_from_db()
   if !loaded
     router.load_default(login)

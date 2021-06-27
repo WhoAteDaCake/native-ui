@@ -10,9 +10,8 @@ These are all points I should adress after initial prototyping is done
 
 ## TODO:
 
-Retrieve emails to 
-
-TODO: Write a description here
+* Investigate catching kill hooks (atm not being executed)
+  * Could be because of the way concurry is used?
 
 ## Installation
 
