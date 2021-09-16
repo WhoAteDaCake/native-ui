@@ -6,9 +6,9 @@ authors:
 
 crystal: 1.0.0
 
-scripts:
-  # Might want to disable debug for full builds
-  postinstall: "cd LCUI && ./autogen.sh && ./configure --prefix=$(pwd) --enable-debug && make"
+# scripts:
+#   # Might want to disable debug for full builds
+#   postinstall: "cd LCUI && ./autogen.sh && ./configure --prefix=$(pwd) --enable-debug && make"
 
 targets:
   native-ui:
