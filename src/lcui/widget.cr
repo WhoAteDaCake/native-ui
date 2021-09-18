@@ -7,8 +7,9 @@ module Lcui
   class Widget
     record Props,
       tag : String,
-      children : Array(Widget) = [] of Widget,
-      callbacks : Events::Handler? = nil
+      children : Array(Widget)? = nil,
+      callbacks : Events::Handler? = nil,
+      classes : Array(String)? = nil
 
     property native : NativeWidget
     property children = [] of Widget
@@ -22,10 +23,12 @@ module Lcui
       else
         props = props_or_native
         @native = LibLCUI.lcui_widget_new(props.tag)
-        @children = props.children
-        @children.each do |c|
+        props.children.try do |c|
+          @children = c
           append(c)
         end
+        # append(@children)
+        props.classes.try { |cnames| add_class(cnames) }
       end
     end
 
@@ -50,9 +53,51 @@ module Lcui
     end
 
     def append(*widgets : Widget)
+      append(widgets.to_a)
+    end
+
+    def append(widgets : Array(Widget))
       widgets.each do |widget|
         LibLCUI.widget_append(@native, widget.native)
         @children << widget
+      end
+    end
+
+    def add_class(*cnames : String)
+      add_class(cnames.to_a)
+    end
+
+    def add_class(cnames : Array(String))
+      cnames.each { |c| LibLCUI.widget_add_class(@native, c) }
+    end
+
+    def has_class(cname : String)
+      result = LibLCUI.widget_has_class(@native, cname)
+      Lcui.to_bool result
+    end
+
+    def remove_class(cname : String)
+      LibLCUI.remove_class(@native, cname)
+    end
+
+    def resize(width : LibC::Float, height : LibC::Float)
+      LibLCUI.widget_resize(@native, width, height)
+    end
+
+    def move(x : LibC::Float, y : LibC::Float)
+      LibLCUI.widget_resize(@native, x, y)
+    end
+
+    def set_attr(name : String, value : String)
+      LibLCUI.widget_set_attribute(@native, name, value)
+    end
+
+    def get_attr(name : String)
+      attr = LibLCUI.widget_get_attribute(@native, name)
+      if attr.null?
+        nil
+      else
+        String.new(attr)
       end
     end
   end
@@ -79,7 +124,7 @@ module Lcui
   #     indirect : Bool = false,
   #     events : Hash(String, Lcui::EventCallback | EventCallback) | Nil = nil
   #   )
-  #     @internal = internal
+  #     @native = internal
   #     @box = EventHash.new
   #     @children = Array(Widget).new
   #     @id = @@id
@@ -106,7 +151,7 @@ module Lcui
   #   end
 
   #   def ptr
-  #     @internal
+  #     @native
   #   end
 
   #     #   def bind_event(event : String, callback : Lcui::EventCallback)
@@ -128,7 +173,7 @@ module Lcui
 
   #   def append_child(*widgets : Widget)
   #     widgets.each do |widget|
-  #       LibLCUI.widget_append(@internal, widget.internal)
+  #       LibLCUI.widget_append(@native, widget.internal)
   #       @children << widget
   #     end
   #   end
@@ -141,41 +186,6 @@ module Lcui
   #   end
 
   #   def remove_children
-  #     LibLCUI.widget_destroy_children(@internal)
+  #     LibLCUI.widget_destroy_children(@native)
   #   end
-
-  #   def add_class(*cnames : String)
-  #     cnames.each { |c| LibLCUI.widget_add_class(@internal, c) }
-  #   end
-
-  #   def has_class(cname : String)
-  #     result = LibLCUI.widget_has_class(@internal, cname)
-  #     Lcui.to_bool result
-  #   end
-
-  #   def remove_class(cname : String)
-  #     LibLCUI.remove_class(@internal, cname)
-  #   end
-
-  #   def resize(width : LibC::Float, height : LibC::Float)
-  #     LibLCUI.widget_resize(@internal, width, height)
-  #   end
-
-  #   def move(x : LibC::Float, y : LibC::Float)
-  #     LibLCUI.widget_resize(@internal, x, y)
-  #   end
-
-  #   def set_attr(name : String, value : String)
-  #     LibLCUI.widget_set_attribute(@internal, name, value)
-  #   end
-
-  #   def get_attr(name : String)
-  #     attr = LibLCUI.widget_get_attribute(@internal, name)
-  #     if attr.null?
-  #       nil
-  #     else
-  #       String.new(attr)
-  #     end
-  #   end
-  # end
 end
