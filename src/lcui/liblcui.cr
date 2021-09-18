@@ -1422,4 +1422,6 @@ lib LibLCUI
   fun widget_get_limited_height = Widget_GetLimitedHeight(w : LcuiWidget, height : LibC::Float) : LibC::Float
   fun lcui_init_widget = LCUI_InitWidget
   fun lcui_free_widget = LCUI_FreeWidget
+  fun lcui_builder_load_string = LCUIBuilder_LoadString(str : LibC::Char*, size : LibC::Int) : LcuiWidget
+  fun lcui_builder_load_file = LCUIBuilder_LoadFile(filepath : LibC::Char*) : LcuiWidget
 end
