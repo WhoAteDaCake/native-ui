@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-fwatcher --all-events \
-  --dir src \
-  -x \
-  execute shards build --no-debug ${1:-native-ui}
