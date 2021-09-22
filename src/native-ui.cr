@@ -18,11 +18,12 @@ Lcui.run do
   root.append(pack)
   LibLCUI.widget_unwrap(pack.native)
 
+  hello = Lcui::TextView.make("Hello")
   root.append(
-    Lcui::TextView.make("Hello"),
+    hello,
     Lcui::Button.make("Hello",
       callbacks: Lcui::Events.handler.on("click") do |w, e|
-        puts "clicked"
+        hello.set_text("Howdy")
       end
     )
   )
