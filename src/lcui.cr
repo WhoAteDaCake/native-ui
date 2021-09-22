@@ -1,3 +1,5 @@
+require "./lcui/*"
+
 module Lcui
   @@css : Array(String) = Array(String).new
   alias Event = LibLCUI::LcuiWidgetEvent

@@ -1,4 +1,4 @@
-require "./lcui/*"
+require "./lcui"
 
 class TmpRef
   property root : Lcui::Widget
