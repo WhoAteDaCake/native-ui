@@ -293,7 +293,7 @@ lib LibLCUI
     val_bool : LcuiBool
   end
 
-  alias WcharT = LibC::Int
+  alias WcharT = UInt16
   enum LcuiSizingRule
     LcuiSizingRuleNone       = 0
     LcuiSizingRuleFixed      = 1

@@ -14,6 +14,7 @@ module Lcui
 
     property native : NativeWidget
     property children = [] of Widget
+    property callbacks : Events::Handler? = nil
     # If we passed a native widget, we don't need to destroy
     @is_ref = false
 
@@ -29,7 +30,8 @@ module Lcui
           append(c)
         end
         props.classes.try { |cnames| add_class(cnames) }
-        props.callbacks.try { |cb| cb.bind(self) }
+        @callbacks = props.callbacks
+        @callbacks.try { |cb| cb.bind(self) }
       end
     end
 
@@ -62,6 +64,7 @@ module Lcui
         LibLCUI.widget_append(@native, widget.native)
         @children << widget
       end
+      self
     end
 
     def add_class(*cnames : String)
@@ -70,6 +73,7 @@ module Lcui
 
     def add_class(cnames : Array(String))
       cnames.each { |c| LibLCUI.widget_add_class(@native, c) }
+      self
     end
 
     def has_class(cname : String)
@@ -99,83 +103,6 @@ module Lcui
       self
     end
   end
-
-  # class Widget
-  #   @@id : Int64 = 0
-  #   alias EventHash = Hash(LibC::Int, Pointer(Void))
-
-  #   property id : Int64
-  #   @box : EventHash
-  #   @children : Array(Widget)
-  #   @cleared : Bool = false
-  #   # if we passed already used pointer to get api access
-  #   @indirect : Bool = false
-
-  #   def self.root
-  #     Widget.new(LibLCUI.lcui_widget_get_root)
-  #   end
-
-  #   def initialize(
-  #     internal : LibLCUI::LcuiWidget,
-  #     classes : Array(String) | Nil = nil,
-  #     children : Array(Widget) | Nil = nil,
-  #     indirect : Bool = false,
-  #     events : Hash(String, Lcui::EventCallback | EventCallback) | Nil = nil
-  #   )
-  #     @native = internal
-  #     @box = EventHash.new
-  #     @children = Array(Widget).new
-  #     @id = @@id
-  #     @@id += 1
-  #     # Set properties
-  #     @indirect = indirect
-  #     if children
-  #       children.each { |c| append_child c }
-  #     end
-  #     if classes
-  #       classes.each { |c| add_class c }
-  #     end
-  #     if events
-  #       events.each { |k, v| bind_event(k, v) }
-  #     end
-  #   end
-
-  #   def self.make_proto(proto_name : String, **opts)
-  #     Widget.new(LibLCUI.lcui_widget_new(proto_name), **opts)
-  #   end
-
-  #   def self.make(**opts)
-  #     Widget.make_proto("widget", **opts)
-  #   end
-
-  #   def ptr
-  #     @native
-  #   end
-
-  #     #   def bind_event(event : String, callback : Lcui::EventCallback)
-  #     boxed_data = Box.box(callback)
-  #     event_id = LibLCUI.widget_bind_event(internal, event, ->(me, event, _data) {
-  #       data_as_callback = Box(typeof(callback)).unbox(event.value.data)
-  #       data_as_callback.call(me, event)
-  #     }, boxed_data, nil)
-  #     @box[event_id] = boxed_data
-  #   end
-
-  #   def bind_event(event : String, &callback : Lcui::EventCallback)
-  #     bind_event(event, callback)
-  #   end
-
-  #   def unbind_event(event_id : LibC::Int)
-  #     @box.delete(event_id)
-  #   end
-
-  #   def append_child(*widgets : Widget)
-  #     widgets.each do |widget|
-  #       LibLCUI.widget_append(@native, widget.internal)
-  #       @children << widget
-  #     end
-  #   end
-
   #   def unmount_child(widget : Widget)
   #     @children.select! do |child|
   #       child.hash != widget.hash

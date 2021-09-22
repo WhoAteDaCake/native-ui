@@ -12,31 +12,29 @@ Lcui.run do
   root = Lcui::Widget.root
   root.style("width", "100px")
     .style("height", "200px")
-
-  pack = LibLCUI.lcui_builder_load_file("./assets/helloworld.xml")
-  pack = Lcui::Widget.reuse(pack)
-  root.append(pack)
-  LibLCUI.widget_unwrap(pack.native)
-
-  hello = Lcui::TextView.make("Hello")
-  root.append(
-    hello,
-    Lcui::Button.make("Hello",
-      callbacks: Lcui::Events.handler.on("click") do |w, e|
-        hello.set_text("Howdy")
-      end
+    .append(
+      hello = Lcui::TextView.make("Hello"),
+      input = Lcui::TextEdit.make("Howdy"),
+      Lcui::Button.make(
+        "Hello",
+        callbacks: Lcui::Events.handler.on("click") do |w, e|
+          # hello.set_text("Howdy")
+          input.sync_text
+          hello.set_text(input.text)
+          # puts input.text
+        end
+      )
     )
-  )
 
-  rf = TmpRef.new(root)
-  boxed_data = Box.box(rf)
-
-  # TMP
   LibLCUI.lcui_display_bind_event(2, ->(e : LibLCUI::LcuiEvent, args : Void*) {
     ref = Box(TmpRef).unbox(e.value.data)
     if !ref.called
       ref.called = true
-      LibLCUI.surface_move(LibLCUI.lcui_display_get_surface_owner(ref.root.native), 0, 300)
+      LibLCUI.surface_move(
+        LibLCUI.lcui_display_get_surface_owner(ref.root.native),
+        0,
+        400
+      )
     end
-  }, nil, boxed_data, nil)
+  }, nil, Box.box(TmpRef.new(root)), nil)
 end
