@@ -11,11 +11,14 @@ module Lcui
     LibLCUI.lcui_init
     Lcui.load_css
 
-    yield
+    root = yield
 
     LibLCUI.lcui_thread_create(out tid, ->(data : Void*) {
       LibLCUI.lcui_main
     }, nil)
+
+    sleep(0.5)
+    LibLCUI.surface_move(LibLCUI.lcui_display_get_surface_owner(root.native), 0, 300)
 
     LibLCUI.lcui_thread_join(tid, nil)
     LibLCUI.lcui_quit

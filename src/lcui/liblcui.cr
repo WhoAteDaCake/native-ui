@@ -4,6 +4,7 @@
 @[Link(ldflags: "-L#{__DIR__}/../../LCUI/build/linux/x86_64/release")]
 @[Link(ldflags: "-llcui")]
 @[Link(ldflags: "-I#{__DIR__}/../../LCUI/include")]
+
 lib LibLCUI
   LCUI_MAX_FRAMES_PER_SEC = 120
   LCUI_DIRENT_NAME_LEN    = 256
@@ -1424,4 +1425,118 @@ lib LibLCUI
   fun lcui_free_widget = LCUI_FreeWidget
   fun lcui_builder_load_string = LCUIBuilder_LoadString(str : LibC::Char*, size : LibC::Int) : LcuiWidget
   fun lcui_builder_load_file = LCUIBuilder_LoadFile(filepath : LibC::Char*) : LcuiWidget
+
+  struct LcuiMetricsRec
+    dpi : LibC::Float
+    density : LibC::Float
+    scaled_density : LibC::Float
+    scale : LibC::Float
+  end
+
+  enum LcuiDensityLevel
+    DensityLevelSmall  = 0
+    DensityLevelNormal = 1
+    DensityLevelLarge  = 2
+    DensityLevelBig    = 3
+  end
+  fun lcui_metrics_compute = LCUIMetrics_Compute(value : LibC::Float, type : LcuiStyleType) : LibC::Float
+  fun lcui_metrics_compute_style = LCUIMetrics_ComputeStyle(style : LcuiStyle) : LibC::Float
+  fun lcui_metrics_compute_rect_actual = LCUIMetrics_ComputeRectActual(dst : LcuiRect*, src : LcuiRectF*)
+  fun lcui_metrics_compute_actual = LCUIMetrics_ComputeActual(value : LibC::Float, type : LcuiStyleType) : LibC::Int
+  fun lcui_metrics_get_scale = LCUIMetrics_GetScale : LibC::Float
+  fun lcui_metrics_set_density = LCUIMetrics_SetDensity(density : LibC::Float)
+  fun lcui_metrics_set_scaled_density = LCUIMetrics_SetScaledDensity(density : LibC::Float)
+  fun lcui_metrics_set_density_level = LCUIMetrics_SetDensityLevel(level : LcuiDensityLevel)
+  fun lcui_metrics_set_scaled_density_level = LCUIMetrics_SetScaledDensityLevel(level : LcuiDensityLevel)
+  fun lcui_metrics_set_dpi = LCUIMetrics_SetDpi(dpi : LibC::Float)
+  fun lcui_metrics_set_scale = LCUIMetrics_SetScale(scale : LibC::Float)
+  fun lcui_init_metrics = LCUI_InitMetrics
+  fun lcui_get_metrics = LCUI_GetMetrics : LcuiMetricsRec*
+  enum LcuiDisplayMode
+    LcuiDmodeWindowed   = 1
+    LcuiDmodeSeamless   = 2
+    LcuiDmodeFullscreen = 3
+  end
+  enum LcuiDisplayEventType
+    LcuiDeventNone       = 0
+    LcuiDeventPaint      = 1
+    LcuiDeventResize     = 2
+    LcuiDeventMinmaxinfo = 3
+    LcuiDeventReady      = 4
+  end
+
+  struct LcuiMinMaxInfoRec
+    min_width : LibC::Int
+    min_height : LibC::Int
+    max_width : LibC::Int
+    max_height : LibC::Int
+  end
+
+  struct LcuiDisplayEventRec
+    type : LibC::Int
+    field_0 : LcuiDisplayEventRecFField0
+    field_1 : LcuiDisplayEventRecFField1
+    field_2 : LcuiDisplayEventRecFField2
+    surface : LcuiSurface
+  end
+
+  struct LcuiDisplayEventRecFField0
+    rect : LcuiRect
+  end
+
+  struct LcuiDisplayEventRecFField1
+    width : LibC::Int
+    height : LibC::Int
+  end
+
+  union LcuiDisplayEventRecFField2
+    paint : LcuiDisplayEventRecFField0
+    resize : LcuiDisplayEventRecFField1
+    minmaxinfo : LcuiMinMaxInfoRec
+  end
+
+  alias LcuiSurface = Void*
+
+  struct LcuiDisplayDriverRec
+    name : LibC::Char[256]
+    get_width : (-> LibC::Int)
+    get_height : (-> LibC::Int)
+    create : (-> LcuiSurface)
+    destroy : (LcuiSurface -> Void)
+    close : (LcuiSurface -> Void)
+    resize : (LcuiSurface, LibC::Int, LibC::Int -> Void)
+    move : (LcuiSurface, LibC::Int, LibC::Int -> Void)
+    show : (LcuiSurface -> Void)
+    hide : (LcuiSurface -> Void)
+    update : (LcuiSurface -> Void)
+    present : (LcuiSurface -> Void)
+    is_ready : (LcuiSurface -> LcuiBool)
+    begin_paint : (LcuiSurface, LcuiRect* -> LcuiPaintContext)
+    end_paint : (LcuiSurface, LcuiPaintContext -> Void)
+    set_caption_w : (LcuiSurface, WcharT* -> Void)
+    set_render_mode : (LcuiSurface, LibC::Int -> Void)
+    get_handle : (LcuiSurface -> Void)
+    get_surface_width : (LcuiSurface -> LibC::Int)
+    get_surface_height : (LcuiSurface -> LibC::Int)
+    set_opacity : (LcuiSurface, LibC::Float -> Void)
+    bind_event : (LibC::Int, LcuiEventFunc, Void*, (Void* -> Void) -> LibC::Int)
+  end
+
+  fun lcui_display_set_mode = LCUIDisplay_SetMode(mode : LibC::Int) : LibC::Int
+  fun lcui_display_get_mode = LCUIDisplay_GetMode : LibC::Int
+  fun lcui_display_update = LCUIDisplay_Update
+  fun lcui_display_render = LCUIDisplay_Render : LibC::SizeT
+  fun lcui_display_present = LCUIDisplay_Present
+  fun lcui_display_enable_paint_flashing = LCUIDisplay_EnablePaintFlashing(enable : LcuiBool)
+  fun lcui_display_set_size = LCUIDisplay_SetSize(width : LibC::Int, height : LibC::Int)
+  fun lcui_display_get_width = LCUIDisplay_GetWidth : LibC::Int
+  fun lcui_display_get_height = LCUIDisplay_GetHeight : LibC::Int
+  fun lcui_display_invalidate_area = LCUIDisplay_InvalidateArea(rect : LcuiRect*)
+  fun lcui_display_get_surface_owner = LCUIDisplay_GetSurfaceOwner(w : LcuiWidget) : LcuiSurface
+  fun lcui_display_get_surface_by_handle = LCUIDisplay_GetSurfaceByHandle(handle : Void*) : LcuiSurface
+  fun lcui_display_bind_event = LCUIDisplay_BindEvent(event_id : LibC::Int, func : LcuiEventFunc, arg : Void*, data : Void*, destroy_data : (Void* -> Void)) : LibC::Int
+  fun lcui_init_display = LCUI_InitDisplay(driver : LcuiDisplayDriver) : LibC::Int
+  alias LcuiDisplayDriver = LcuiDisplayDriverRec*
+  fun lcui_free_display = LCUI_FreeDisplay : LibC::Int
+  fun surface_move = Surface_Move(surface : LcuiSurface, x : LibC::Int, y : LibC::Int)
 end

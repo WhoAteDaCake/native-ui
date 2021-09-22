@@ -27,8 +27,8 @@ module Lcui
           @children = c
           append(c)
         end
-        # append(@children)
         props.classes.try { |cnames| add_class(cnames) }
+        props.callbacks.try { |cb| cb.register(self) }
       end
     end
 
@@ -80,14 +80,6 @@ module Lcui
       LibLCUI.remove_class(@native, cname)
     end
 
-    def resize(width : LibC::Float, height : LibC::Float)
-      LibLCUI.widget_resize(@native, width, height)
-    end
-
-    def move(x : LibC::Float, y : LibC::Float)
-      LibLCUI.widget_resize(@native, x, y)
-    end
-
     def set_attr(name : String, value : String)
       LibLCUI.widget_set_attribute(@native, name, value)
     end
@@ -99,6 +91,11 @@ module Lcui
       else
         String.new(attr)
       end
+    end
+
+    def style(name : String, value : String)
+      LibLCUI.widget_set_style_string(@native, name, value)
+      self
     end
   end
 

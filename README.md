@@ -8,6 +8,11 @@ These are all points I should adress after initial prototyping is done
 * Easier write to write components. A react-like interface would be great:
   * `Widget.make(children=[Button.new(text="hello")], class_name=["hello", "test"])`
 
+## Useful links
+
+* https://github.com/D-Programming-Deimos/libX11/blob/master/c/X11/X.h#L150
+  * List of events that you can bind to via LCUIDisplay_BindEvent
+
 ## TODO:
 
 * Investigate catching kill hooks (atm not being executed)
