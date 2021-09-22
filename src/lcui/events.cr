@@ -1,8 +1,14 @@
+require "./widgets/**"
+
 module Lcui
   module Events
     # TODO: start supporting more typed events in the future
     alias NativeEvent = LibLCUI::LcuiWidgetEvent
     alias NativeEventCallback = (Widget, NativeEvent) ->
+
+    def self.handler
+      Handler.new
+    end
 
     class Handler
       # Used for storing event callbacks to avoid GC
@@ -19,12 +25,12 @@ module Lcui
         self
       end
 
-      def register(widget : Widget)
+      def bind(widget : Widget)
         @register.each do |event, callback|
-          boxed_data = Box.box(callback)
-          event_id = LibLCUI.widget_bind_event(internal, event, ->(me, event, _data) {
-            data_as_callback = Box(typeof(callback)).unbox(event.value.data)
-            data_as_callback.call(me, event)
+          boxed_data = Box.box({widget, callback})
+          event_id = LibLCUI.widget_bind_event(widget.native, event, ->(native, event, _data) {
+            me, cb = Box(Tuple(Widget, NativeEventCallback)).unbox(event.value.data)
+            cb.call(me, event)
           }, boxed_data, nil)
           @box[event_id] = boxed_data
         end

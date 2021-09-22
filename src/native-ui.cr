@@ -18,6 +18,15 @@ Lcui.run do
   root.append(pack)
   LibLCUI.widget_unwrap(pack.native)
 
+  root.append(
+    Lcui::TextView.make("Hello"),
+    Lcui::Button.make("Hello",
+      callbacks: Lcui::Events.handler.on("click") do |w, e|
+        puts "clicked"
+      end
+    )
+  )
+
   rf = TmpRef.new(root)
   boxed_data = Box.box(rf)
 

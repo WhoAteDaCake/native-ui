@@ -1,5 +1,6 @@
-require "./liblcui.cr"
-require "./lcui.cr"
+require "../liblcui.cr"
+
+# require "./lcui.cr"
 
 module Lcui
   alias NativeWidget = LibLCUI::LcuiWidget
@@ -28,7 +29,7 @@ module Lcui
           append(c)
         end
         props.classes.try { |cnames| add_class(cnames) }
-        props.callbacks.try { |cb| cb.register(self) }
+        props.callbacks.try { |cb| cb.bind(self) }
       end
     end
 
@@ -41,15 +42,15 @@ module Lcui
     end
 
     def self.make(tag : String, **opts)
-      Widget.new(Props.new(tag, **opts))
+      self.new(Props.new(tag, **opts))
     end
 
     def self.reuse(widget : NativeWidget)
-      Widget.new(widget)
+      self.new(widget)
     end
 
     def self.root
-      Widget.new(LibLCUI.lcui_widget_get_root)
+      self.new(LibLCUI.lcui_widget_get_root)
     end
 
     def append(*widgets : Widget)

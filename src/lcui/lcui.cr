@@ -11,13 +11,11 @@ module Lcui
     LibLCUI.lcui_init
     Lcui.load_css
 
-    root = yield
+    yield
 
     LibLCUI.lcui_thread_create(out tid, ->(data : Void*) {
       LibLCUI.lcui_main
     }, nil)
-
-    # sleep(1)
 
     LibLCUI.lcui_thread_join(tid, nil)
     LibLCUI.lcui_quit

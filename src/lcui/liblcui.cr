@@ -6,6 +6,7 @@
 @[Link(ldflags: "-I#{__DIR__}/../../LCUI/include")]
 
 lib LibLCUI
+  fun surface_move = Surface_Move(surface : LcuiSurface, x : LibC::Int, y : LibC::Int)
   LCUI_MAX_FRAMES_PER_SEC = 120
   LCUI_DIRENT_NAME_LEN    = 256
   enum LcuiColorType
@@ -1538,5 +1539,51 @@ lib LibLCUI
   fun lcui_init_display = LCUI_InitDisplay(driver : LcuiDisplayDriver) : LibC::Int
   alias LcuiDisplayDriver = LcuiDisplayDriverRec*
   fun lcui_free_display = LCUI_FreeDisplay : LibC::Int
-  fun surface_move = Surface_Move(surface : LcuiSurface, x : LibC::Int, y : LibC::Int)
+  fun text_view_set_text_w = TextView_SetTextW(w : LcuiWidget, text : WcharT*) : LibC::Int
+  fun text_view_set_text = TextView_SetText(w : LcuiWidget, utf8_text : LibC::Char*) : LibC::Int
+  fun text_view_set_line_height = TextView_SetLineHeight(w : LcuiWidget, height : LibC::Int)
+  fun text_view_set_text_align = TextView_SetTextAlign(w : LcuiWidget, align : LibC::Int)
+  fun text_view_set_color = TextView_SetColor(w : LcuiWidget, color : LcuiColor)
+  fun text_view_set_auto_wrap = TextView_SetAutoWrap(w : LcuiWidget, enable : LcuiBool)
+  fun text_view_set_mulitiline = TextView_SetMulitiline(w : LcuiWidget, enable : LcuiBool)
+  fun lcui_widget_refresh_text_view = LCUIWidget_RefreshTextView : LibC::SizeT
+  fun lcui_widget_add_text_view = LCUIWidget_AddTextView
+  fun lcui_widget_free_text_view = LCUIWidget_FreeTextView
+  fun text_edit_enable_style_tag = TextEdit_EnableStyleTag(widget : LcuiWidget, enable : LcuiBool)
+  fun text_edit_enable_multiline = TextEdit_EnableMultiline(widget : LcuiWidget, enable : LcuiBool)
+  fun text_edit_move_caret = TextEdit_MoveCaret(widget : LcuiWidget, row : LibC::Int, col : LibC::Int)
+  fun text_edit_clear_text = TextEdit_ClearText(widget : LcuiWidget)
+  fun text_edit_get_text_w = TextEdit_GetTextW(w : LcuiWidget, start : LibC::SizeT, max_len : LibC::SizeT, buf : WcharT*) : LibC::SizeT
+  fun text_edit_get_text_length = TextEdit_GetTextLength(w : LcuiWidget) : LibC::SizeT
+  fun text_edit_set_caret_blink = TextEdit_SetCaretBlink(w : LcuiWidget, visible : LcuiBool, time : LibC::Int)
+  fun text_edit_get_property = TextEdit_GetProperty(w : LcuiWidget, name : LibC::Char*) : LcuiObject
+  fun text_edit_set_text_w = TextEdit_SetTextW(widget : LcuiWidget, wstr : WcharT*) : LibC::Int
+  fun text_edit_set_text = TextEdit_SetText(widget : LcuiWidget, utf8_str : LibC::Char*) : LibC::Int
+  fun text_edit_append_text_w = TextEdit_AppendTextW(widget : LcuiWidget, wstr : WcharT*) : LibC::Int
+  fun text_edit_insert_text_w = TextEdit_InsertTextW(widget : LcuiWidget, wstr : WcharT*) : LibC::Int
+  fun text_edit_set_place_holder_w = TextEdit_SetPlaceHolderW(w : LcuiWidget, wstr : WcharT*) : LibC::Int
+  fun text_edit_set_place_holder = TextEdit_SetPlaceHolder(w : LcuiWidget, str : LibC::Char*) : LibC::Int
+  fun text_edit_set_password_char = TextEdit_SetPasswordChar(w : LcuiWidget, ch : WcharT)
+  fun lcui_widget_add_text_edit = LCUIWidget_AddTextEdit
+  fun text_caret_refresh = TextCaret_Refresh(widget : LcuiWidget)
+  fun text_caret_set_visible = TextCaret_SetVisible(widget : LcuiWidget, visible : LcuiBool)
+  fun text_caret_set_blink_time = TextCaret_SetBlinkTime(widget : LcuiWidget, n_ms : LibC::UInt)
+  fun lcui_widget_add_text_caret = LCUIWidget_AddTextCaret
+  fun side_bar_append_item = SideBar_AppendItem(sidebar : LcuiWidget, id : WcharT*, icon : WcharT*, text : WcharT*) : LcuiWidget
+  fun lcui_widget_add_side_bar = LCUIWidget_AddSideBar
+  enum LcuiScrollBarDirection
+    LcuiScrollbarHorizontal = 0
+    LcuiScrollbarVertical   = 1
+  end
+  fun scroll_bar_bind_box = ScrollBar_BindBox(w : LcuiWidget, box : LcuiWidget)
+  fun scroll_bar_bind_target = ScrollBar_BindTarget(w : LcuiWidget, layer : LcuiWidget)
+  fun scroll_bar_get_position = ScrollBar_GetPosition(w : LcuiWidget) : LibC::Int
+  fun scroll_bar_set_position = ScrollBar_SetPosition(w : LcuiWidget, pos : LibC::Int) : LibC::Int
+  fun scroll_bar_set_direction = ScrollBar_SetDirection(w : LcuiWidget, direction : LcuiScrollBarDirection)
+  fun lcui_widget_add_t_scroll_bar = LCUIWidget_AddTScrollBar
+  fun button_set_text_w = Button_SetTextW(w : LcuiWidget, wstr : WcharT*)
+  fun button_set_text = Button_SetText(w : LcuiWidget, str : LibC::Char*)
+  fun lcui_widget_add_button = LCUIWidget_AddButton
+  fun anchor_open = Anchor_Open(w : LcuiWidget)
+  fun lcui_widget_add_anchor = LCUIWidget_AddAnchor
 end
