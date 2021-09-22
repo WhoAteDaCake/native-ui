@@ -1,1 +1,1 @@
-require "./widgets/**"
+require "./widgets/*"

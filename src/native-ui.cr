@@ -33,7 +33,7 @@ Lcui.run do
       LibLCUI.surface_move(
         LibLCUI.lcui_display_get_surface_owner(ref.root.native),
         0,
-        400
+        450
       )
     end
   }, nil, Box.box(TmpRef.new(root)), nil)

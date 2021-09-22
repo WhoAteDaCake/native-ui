@@ -3,10 +3,10 @@ class Context(T)
 
   @id : Id = 0
   @state : T
-  @subscribers : Hash(Int64, (T -> Void))
+  @subscribers : Hash(Id, (T -> Void))
   
   def initialize(@state : T)
-    @subscribers = Hash(Int64, (T -> Void)).new
+    @subscribers = Hash(Id, (T -> Void)).new
   end
 
   def state

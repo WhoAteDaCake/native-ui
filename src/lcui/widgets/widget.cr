@@ -15,6 +15,7 @@ module Lcui
     property native : NativeWidget
     property children = [] of Widget
     property callbacks : Events::Handler? = nil
+    property hash : LibC::UInt
     # If we passed a native widget, we don't need to destroy
     @is_ref = false
 
@@ -22,9 +23,11 @@ module Lcui
       if props_or_native.is_a?(NativeWidget)
         @is_ref = true
         @native = props_or_native
+        @hash = @native.value.hash
       else
         props = props_or_native
         @native = LibLCUI.lcui_widget_new(props.tag)
+        @hash = @native.value.hash
         props.children.try do |c|
           @children = c
           append(c)
@@ -102,15 +105,12 @@ module Lcui
       LibLCUI.widget_set_style_string(@native, name, value)
       self
     end
-  end
-  #   def unmount_child(widget : Widget)
-  #     @children.select! do |child|
-  #       child.hash != widget.hash
-  #     end
-  #     LibLCUI.widget_unlink(widget.internal)
-  #   end
 
-  #   def remove_children
-  #     LibLCUI.widget_destroy_children(@native)
-  #   end
+    def unmount(widget : Widget)
+      @children.select! do |child|
+        child.hash != widget.hash
+      end
+      LibLCUI.widget_unlink(widget.native)
+    end
+  end
 end
