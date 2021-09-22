@@ -17,8 +17,7 @@ module Lcui
       LibLCUI.lcui_main
     }, nil)
 
-    sleep(0.5)
-    LibLCUI.surface_move(LibLCUI.lcui_display_get_surface_owner(root.native), 0, 300)
+    # sleep(1)
 
     LibLCUI.lcui_thread_join(tid, nil)
     LibLCUI.lcui_quit
