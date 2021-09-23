@@ -28,10 +28,7 @@ module Lcui
         props = props_or_native
         @native = LibLCUI.lcui_widget_new(props.tag)
         @hash = @native.value.hash
-        props.children.try do |c|
-          @children = c
-          append(c)
-        end
+        props.children.try { |c| append(c) }
         props.classes.try { |cnames| add_class(cnames) }
         @callbacks = props.callbacks
         @callbacks.try { |cb| cb.bind(self) }
@@ -67,6 +64,7 @@ module Lcui
     end
 
     def append(widgets : Array(Widget))
+      puts "Appending"
       widgets.each do |widget|
         LibLCUI.widget_append(@native, widget.native)
         @children << widget

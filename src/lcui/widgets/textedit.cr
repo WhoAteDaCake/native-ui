@@ -2,15 +2,23 @@ require "./textview"
 
 module Lcui
   class TextEdit < TextView
+    record TextEditProps,
+      placeholder : String,
+      props : TextViewProps
+
     @buffer_size : Int16 = 512
 
-    def self.make(text : String? = nil, placeholder : String? = nil, **opts)
-      self.new(Props.new("textedit", **opts), text, placeholder)
+    def self.parse(tag : String, placeholder : String, **opts)
+      TextEditProps.new(placeholder, TextView.parse(tag, **opts))
     end
 
-    def initialize(props, text : String? = nil, placeholder : String? = nil)
-      super(text || "", props)
-      placeholder.try { |p| placeholder(p) }
+    def self.make(placeholder : String? = nil, **opts)
+      self.new(self.parse("textedit", placeholder, **opts))
+    end
+
+    def initialize(props : TextEditProps)
+      super(props.props)
+      props.placeholder.try { |p| placeholder(p) }
     end
 
     def placeholder(ph : String)

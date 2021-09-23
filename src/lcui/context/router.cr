@@ -40,12 +40,6 @@ module Lcui
         @history = Array(String).new
       end
 
-      def load_default(default_page : Page)
-        @active = default_page
-        @history << default_page.url
-        @root.append_child(default_page.container)
-      end
-
       def change_page(route : String, page : Page, params : Hash(String, String))
         @active.try { |page| page.on_unmount }
         @active = page

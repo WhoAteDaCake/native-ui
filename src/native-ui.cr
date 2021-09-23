@@ -15,7 +15,10 @@ Lcui.run do
     .style("height", "200px")
 
   router = Lcui::Router::Instance.new(root)
-  router.add(Pages::Login.new(root))
+  login = Pages::Login.new(root)
+  router.add(login)
+  router.replace("/login")
+  # router.sea
 
   Lcui::Router::Global.listen do |action|
     action, route = action
@@ -28,20 +31,8 @@ Lcui.run do
       router.pop
     end
   end
-  # .append(
-  #   hello = Lcui::TextView.make("Hello"),
-  #   input = Lcui::TextEdit.make("Howdy"),
-  #   Lcui::Button.make(
-  #     "Hello",
-  #     callbacks: Lcui::Events.handler.on("click") do |w, e|
-  #       # hello.set_text("Howdy")
-  #       input.sync_text
-  #       hello.set_text(input.text)
-  #       # puts input.text
-  #     end
-  #   )
-  # )
-
+  # TEMPORARY TOOL to move sapp to the side of the screen
+  #
   LibLCUI.lcui_display_bind_event(2, ->(e : LibLCUI::LcuiEvent, args : Void*) {
     ref = Box(TmpRef).unbox(e.value.data)
     if !ref.called
