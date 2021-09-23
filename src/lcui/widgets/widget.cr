@@ -50,6 +50,10 @@ module Lcui
       self.new(Props.new(tag, **opts))
     end
 
+    def self.make(**opts)
+      self.new(Props.new("widget", **opts))
+    end
+
     def self.reuse(widget : NativeWidget)
       self.new(widget)
     end

@@ -1,30 +1,6 @@
 require "http"
 require "json"
 
-# require "http"
-# require "json"
-# require "./slack/**"
-
-# # data = Slack::ConversationMeta.from_json(%({"id":"G1HDV2DR9","name":"spotlight-data","is_channel":false,"is_group":true,"is_im":false,"created":1466077666,"is_archived":false,"is_general":false,"unlinked":0,"name_normalized":"spotlight-data","is_shared":false,"is_frozen":false,"parent_conversation":null,"creator":"U0CUURR5X","is_ext_shared":false,"is_org_shared":false,"shared_team_ids":["T0CUURR5F"],"pending_shared":[],"pending_connected_team_ids":[],"is_pending_ext_shared":false,"is_member":true,"is_private":true,"is_mpim":false,"last_read":"1626686500.000200","is_open":true,"topic":{"value":"Spotlight Data only chat","creator":"U0CUURR5X","last_set":1493048940},"purpose":{"value":"","creator":"U0CUURR5X","last_set":1466078743},"priority":0}))
-
-# client = Slack::Client.new(ENV["TOKEN"], "T0CUURR5F")
-# data = client.get("conversations.list", {"types" => ["public_channel,private_channel,mpim,im"]})
-# data = data.map { |r| Slack::ConversationsAll.from_json(r) }
-
-# if data.is_a?(Slack::SError)
-#   puts data.error
-# end
-
-# # puts client.get("conversations.list")
-# # team = Slack.team "spotlightdata"
-# # if team.is_a?(Slack::Team)
-# #   puts team.team_id
-# #   resp = Slack.signin(team.team_id, ENV["EMAIL"], ENV["PASSWORD"])
-# #   puts resp
-# # else
-# #   puts team.error
-# # end
-
 module Slack
   API     = "https://slack.com/api"
   HEADERS = HTTP::Headers{"Content-Type" => "application/x-www-form-urlencoded; charset=utf-8"}

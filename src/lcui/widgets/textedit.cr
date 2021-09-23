@@ -4,8 +4,17 @@ module Lcui
   class TextEdit < TextView
     @buffer_size : Int16 = 512
 
-    def self.make(text : String, **opts)
-      self.new(text, Props.new("textedit", **opts))
+    def self.make(text : String? = nil, placeholder : String? = nil, **opts)
+      self.new(Props.new("textedit", **opts), text, placeholder)
+    end
+
+    def initialize(props, text : String? = nil, placeholder : String? = nil)
+      super(text || "", props)
+      placeholder.try { |p| placeholder(p) }
+    end
+
+    def placeholder(ph : String)
+      LibLCUI.text_edit_set_place_holder(@native, ph)
     end
 
     def set_text(text)
