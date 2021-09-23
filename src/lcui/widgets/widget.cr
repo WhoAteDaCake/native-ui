@@ -64,7 +64,6 @@ module Lcui
     end
 
     def append(widgets : Array(Widget))
-      puts "Appending"
       widgets.each do |widget|
         LibLCUI.widget_append(@native, widget.native)
         @children << widget

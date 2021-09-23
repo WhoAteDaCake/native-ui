@@ -12,8 +12,14 @@ module Pages
             Lcui::TextView.make(
               "Team name"
             ),
-            Lcui::TextEdit.make(
+            team = Lcui::TextEdit.make(
               placeholder: "Please enter your team name"
+            ),
+            Lcui::Button.make(
+              text: "Submit",
+              callbacks: Lcui::Events.handler.on("click") do |w, e|
+                puts "Heyo"
+              end
             ),
           ] of Lcui::Widget
         )]
