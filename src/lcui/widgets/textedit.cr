@@ -45,5 +45,10 @@ module Lcui
       end
       @text = output
     end
+
+    def synced_text
+      sync_text
+      @text
+    end
   end
 end

@@ -18,7 +18,7 @@ module Pages
             Lcui::Button.make(
               text: "Submit",
               callbacks: Lcui::Events.handler.on("click") do |w, e|
-                puts "Heyo"
+                puts team.synced_text
               end
             ),
           ] of Lcui::Widget
