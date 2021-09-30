@@ -2,31 +2,24 @@ require "./widget"
 
 module Lcui
   class TextView < Widget
-    record TextViewProps,
-      text : String,
-      props : Props
+    property text : String?
 
-    property text : String
-
-    def initialize(props : TextViewProps)
-      super(props.props)
-      # Need this because crystal doesn't allow
-      # instance variables not be initialized
-      @text = props.text
-      set_text(props.text)
+    def initialize(type_or_native : String | NativeWidget, text : String? = nil)
+      super(type_or_native)
+      text.try do |txt|
+        @text = txt
+        text(txt)
+      end
     end
 
-    def self.parse(tag : String, text : String? = nil, **opts)
-      TextViewProps.new(text || "", Props.new(tag, **opts))
+    def self.make(text : String)
+      self.new("textview", text)
     end
 
-    def self.make(text : String, **opts)
-      self.new(parse("textview", text, **opts))
-    end
-
-    def set_text(text)
+    def text(text : String)
       @text = text
-      LibLCUI.button_set_text(@native, @text)
+      LibLCUI.text_view_set_text(@native, text)
+      self
     end
   end
 end

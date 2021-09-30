@@ -6,11 +6,11 @@ module Lcui
   alias NativeWidget = LibLCUI::LcuiWidget
 
   class Widget
-    record Props,
-      tag : String,
-      children : Array(Widget)? = nil,
-      callbacks : Events::Handler? = nil,
-      classes : Array(String)? = nil
+    # record Props,
+    #   tag : String,
+    #   children : Array(Widget)? = nil,
+    #   callbacks : Events::Handler? = nil,
+    #   classes : Array(String)? = nil
 
     property native : NativeWidget
     property children = [] of Widget
@@ -19,20 +19,26 @@ module Lcui
     # If we passed a native widget, we don't need to destroy
     @is_ref = false
 
-    def initialize(props_or_native : Props | NativeWidget)
-      if props_or_native.is_a?(NativeWidget)
+    def initialize(type_or_native : String | NativeWidget)
+      if type_or_native.is_a?(NativeWidget)
         @is_ref = true
-        @native = props_or_native
+        @native = type_or_native
         @hash = @native.value.hash
       else
-        props = props_or_native
-        @native = LibLCUI.lcui_widget_new(props.tag)
+        props = type_or_native
+        @native = LibLCUI.lcui_widget_new(type_or_native)
         @hash = @native.value.hash
-        props.children.try { |c| append(c) }
-        props.classes.try { |cnames| add_class(cnames) }
-        @callbacks = props.callbacks
-        @callbacks.try { |cb| cb.bind(self) }
+        # props.children.try { |c| append(c) }
+        # props.classes.try { |cnames| add_class(cnames) }
+        # @callbacks = props.callbacks
+        # @callbacks.try { |cb| cb.bind(self) }
       end
+    end
+
+    def callbacks(handler : Events::Handler)
+      @callbacks = handler
+      handler.bind(self)
+      self
     end
 
     def finalize
@@ -43,12 +49,12 @@ module Lcui
       LibLCUI.widget_destroy(@native)
     end
 
-    def self.make(tag : String, **opts)
-      self.new(Props.new(tag, **opts))
+    def self.make(tag : String)
+      self.new(tag)
     end
 
-    def self.make(**opts)
-      self.new(Props.new("widget", **opts))
+    def self.make
+      self.new("widget")
     end
 
     def self.reuse(widget : NativeWidget)
@@ -105,6 +111,10 @@ module Lcui
     def style(name : String, value : String)
       LibLCUI.widget_set_style_string(@native, name, value)
       self
+    end
+
+    def has_child?(widget : Widget)
+      @children.select { |w| w.hash == widget.hash }.size != 0
     end
 
     def unmount(widget : Widget)

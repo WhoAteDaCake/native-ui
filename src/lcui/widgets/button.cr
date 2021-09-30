@@ -3,8 +3,8 @@ require "./textview"
 
 module Lcui
   class Button < TextView
-    def self.make(text : String, **opts)
-      self.new(parse("button", text, **opts))
+    def self.make(text : String? = nil)
+      self.new("button", text)
     end
   end
 end

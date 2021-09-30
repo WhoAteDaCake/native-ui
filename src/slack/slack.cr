@@ -47,7 +47,7 @@ module Slack
 
   def self.team(domain)
     data = request("auth.findTeam", {"domain" => domain})
-    data.map Team.from_json
+    data.map { |r| Team.from_json r }
   end
 
   def self.signin(team, email, password)

@@ -2,23 +2,15 @@ require "./textview"
 
 module Lcui
   class TextEdit < TextView
-    record TextEditProps,
-      placeholder : String,
-      props : TextViewProps
-
     @buffer_size : Int16 = 512
 
-    def self.parse(tag : String, placeholder : String, **opts)
-      TextEditProps.new(placeholder, TextView.parse(tag, **opts))
+    def self.make(text : String? = nil, placeholder : String? = nil)
+      self.new(text, placeholder, "textedit")
     end
 
-    def self.make(placeholder : String? = nil, **opts)
-      self.new(self.parse("textedit", placeholder, **opts))
-    end
-
-    def initialize(props : TextEditProps)
-      super(props.props)
-      props.placeholder.try { |p| placeholder(p) }
+    def initialize(text, placeholder, type_or_native : String | NativeWidget)
+      super(type_or_native, text)
+      placeholder.try { |p| placeholder(p) }
     end
 
     def placeholder(ph : String)
@@ -44,11 +36,7 @@ module Lcui
         output += string
       end
       @text = output
-    end
-
-    def synced_text
-      sync_text
-      @text
+      output
     end
   end
 end
