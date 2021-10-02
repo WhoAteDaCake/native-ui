@@ -1,5 +1,6 @@
 require "./lcui"
 require "./pages"
+require "./state"
 
 class TmpRef
   property root : Lcui::Widget
@@ -15,10 +16,14 @@ Lcui.run do
     .style("height", "200px")
 
   router = Lcui::Router::Instance.new(root)
-  login = Pages::Login.new(root)
-  router.add(login)
-  router.replace("/login")
-  # router.sea
+  router.add(Pages::TeamSelect.new(root), Pages::Login.new(root))
+  auth_state = State.get.state.auth_state
+  if auth_state.is_a?(Nil)
+    router.replace("/team_select")
+    # TODO: home page if not nil ?
+  else
+    router.replace("/login")
+  end
 
   Lcui::Router::Global.listen do |action|
     action, route = action

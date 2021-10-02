@@ -3,41 +3,53 @@ require "../slack"
 module Pages
   class Login < Lcui::Page
     property url = "/login"
-    property prefix = "login_page"
-    property error : Lcui::TextView
+    property prefix = "login"
 
     def initialize(@root)
-      @error = Lcui::TextView.make("")
-
       @container = Lcui::Widget.make
         .add_class(@prefix)
-      @container = @container.append(Lcui::Widget.make
-        .add_class("#{@prefix}_container")
         .append(
-          Lcui::TextView.make(
-            "Team name"
-          ),
-          team = Lcui::TextEdit.make(
-            placeholder: "Please enter your team name"
-          ),
-          Lcui::Button.make("Submit")
-            .callbacks(
-              Lcui::Events.handler.on("click") do |w, e|
-                text = team.sync_text
-                s_team = Slack.team(text)
-                if @container.has_child?(@error)
-                  @container.unmount(@error)
-                end
-                if s_team.is_a?(Slack::SError)
-                  @error.text(s_team.error)
-                  @container.append(@error)
-                else
-                  puts s_team
-                end
-              end
-            ),
+          Lcui::Widget.make
+            .add_class("#{@prefix}_container")
+            .append(
+              Lcui::TextView.make("Username/Password"),
+              username = Lcui::TextEdit.make(
+                placeholder: "Username"
+              ),
+              password = Lcui::TextEdit.make(
+                placeholder: "Password"
+              ),
+              Lcui::Button.make("Submit")
+            )
         )
-      )
+      # @description = Lcui::TextView.make("")
+      # @container = Lcui::Widget.make
+      #   .add_class(@prefix)
+      # @container.append(Lcui::Widget.make
+      #   .add_class("#{@prefix}_container")
+      #   .append(
+      #     Lcui::TextView.make(
+      #       "Team name"
+      #     ),
+      #     team = Lcui::TextEdit.make(
+      #       placeholder: "Please enter your team name"
+      #     ),
+      #     Lcui::Button.make("Submit")
+      #       .callbacks(
+      #         Lcui::Events.handler.on("click") do |w, e|
+      #           @description.text("Loading")
+      #           text = team.sync_text
+      #           s_team = Slack.team(text)
+      #           if s_team.is_a?(Slack::SError)
+      #             @description.text(s_team.error)
+      #           else
+      #             State.get.update(
+      #               State::Internal.new(State::WithTeam.new(s_team.raw)))
+      #           end
+      #         end
+      #       ),
+      #   ), @description
+      # )
     end
   end
 end
